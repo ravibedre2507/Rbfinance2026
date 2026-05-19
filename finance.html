@@ -16,8 +16,46 @@ p{color:#b0b8d1;font-size:1.12rem;line-height:1.8;max-width:1300px}
 .report-card h3{font-size:1.7rem;line-height:1.4;margin-bottom:1rem}
 .report-card p{font-size:1.08rem;line-height:1.8}
 .btn{display:inline-block;margin-top:1.5rem;padding:12px 24px;background:#F5A623;color:#000;text-decoration:none;border-radius:10px;font-weight:700;font-size:1rem;width:fit-content}
-.back-icon{position:fixed;top:30px;right:30px;background:#151A2C;border:1px solid rgba(255,255,255,.1);color:#F5A623;text-decoration:none;font-size:1.8rem;width:55px;height:55px;display:flex;align-items:center;justify-content:center;border-radius:50%;transition:.3s;box-shadow:0 8px 20px rgba(0,0,0,.3)}
-.back-icon:hover{transform:translateY(-3px);border-color:#F5A623;background:#1d2440}
+.back-button {
+    position: fixed;
+    top: 24px;
+    right: 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 16px;
+    border-radius: 40px;
+    background: rgba(20, 28, 58, 0.85);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    color: #f5a623;
+    text-decoration: none;
+    font-size: 15px;
+    font-weight: 600;
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+    z-index: 1000;
+}
+
+.back-button:hover {
+    transform: translateX(-4px);
+    background: rgba(30, 40, 80, 0.95);
+}
+
+.back-text {
+    color: #f5a623;
+}
+
+.back-arrow {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #111a36;
+    border: 1px solid rgba(255,255,255,0.08);
+    font-size: 18px;
+}
 @media(max-width:768px){body{padding:7%}.reports-grid{grid-template-columns:1fr}h1{font-size:2.2rem}h2{font-size:2rem}}
 </style>
 </head>
