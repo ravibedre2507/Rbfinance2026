@@ -6,74 +6,71 @@
 <title>R B Finance</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-body{font-family:'Inter',sans-serif;background:#050816;color:#fff;margin:0;line-height:1.8;font-size:18px}
-a{text-decoration:none;color:inherit}
-nav{padding:1.5rem 6%;display:flex;justify-content:flex-start;align-items:center;background:rgba(16,23,42,.9);backdrop-filter:blur(12px);position:sticky;top:0;border-bottom:1px solid rgba(255,255,255,.08);box-shadow:0 4px 20px rgba(0,0,0,.3);z-index:1000}
-.logo-container{display:flex;align-items:center;gap:14px}
-.logo-text{font-size:2.2rem;font-weight:800;color:#ffffff;letter-spacing:.5px}
-.hero{min-height:82vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:4rem 5%;background:radial-gradient(circle at top,#172554 0%,#050816 65%)}
-.hero h1{font-size:5rem;font-weight:800;line-height:1.2;margin-bottom:2rem;max-width:1450px;animation:fadeUp 1.2s ease}
-.hero .gold{color:#f5a623}
-.hero .blue{color:#60a5fa}
-.hero .purple{color:#a78bfa}
-.hero p{font-size:2rem;color:#e2e8f0;max-width:1100px;margin:auto;font-weight:600;line-height:1.7;animation:fadeUp 1.8s ease}
-.hero p span{color:#f5a623}
-@keyframes fadeUp{
-from{opacity:0;transform:translateY(25px)}
-to{opacity:1;transform:translateY(0)}
-}
-section{padding:5rem 5%}
-.section-header{text-align:center;margin-bottom:3.5rem}
-.section-header h2{font-size:3.3rem;font-weight:800;margin-bottom:1rem}
-.grid-4,.grid-3{display:grid;gap:1.8rem}.grid-4{grid-template-columns:repeat(4,1fr)}.grid-3{grid-template-columns:repeat(3,1fr)}
-.card{background:#151b2f;padding:2rem;border-radius:22px;border:1px solid rgba(255,255,255,.08);transition:.35s;box-shadow:0 10px 30px rgba(0,0,0,.25)}
-.card:hover{transform:translateY(-7px);border-color:#f5a623;box-shadow:0 18px 40px rgba(0,0,0,.35)}
-.card-thumb{font-size:2.7rem;margin-bottom:1rem}
-.card h3{font-size:1.7rem;margin-bottom:.8rem}
-.card p{font-size:1.08rem;color:#d1d5db}
-.alt-bg{background:#0b1225}
-.footer{text-align:center;padding:2.5rem;color:#94a3b8;font-size:1.05rem;border-top:1px solid rgba(255,255,255,.06)}
-@media(max-width:992px){
-.grid-4{grid-template-columns:repeat(2,1fr)}
-.grid-3{grid-template-columns:repeat(2,1fr)}
-.hero h1{font-size:3.8rem}
-.section-header h2{font-size:2.7rem}
-.hero p{font-size:1.45rem}
-}
-@media(max-width:768px){
-nav{padding:1rem 5%}
-.logo-text{font-size:1.7rem}
-.grid-4,.grid-3{grid-template-columns:1fr}
-.hero{min-height:70vh;padding:3rem 5%}
-.hero h1{font-size:2.8rem}
-.hero p{font-size:1.15rem}
-.section-header h2{font-size:2.2rem}
-body{font-size:16px}
-}
+body{font-family:'Inter',sans-serif;background:#050816;color:#fff;margin:0;line-height:1.7;font-size:17px}a{text-decoration:none;color:inherit}html{scroll-behavior:smooth}
+nav{padding:1rem 5%;display:flex;justify-content:space-between;align-items:center;background:rgba(16,23,42,.92);backdrop-filter:blur(12px);position:sticky;top:0;border-bottom:1px solid rgba(255,255,255,.08);z-index:1000}.logo-text{font-size:1.9rem;font-weight:800}.nav-links{display:flex;gap:1.5rem;font-size:.95rem;color:#cbd5e1}.nav-links a:hover{color:#f5a623}
+.hero{padding:5rem 5% 3rem;background:radial-gradient(circle at top,#172554 0%,#050816 65%)}.hero-grid{display:grid;grid-template-columns:1.2fr .8fr;gap:2rem;align-items:center}.hero h1{font-size:4.2rem;font-weight:800;line-height:1.15;margin-bottom:1.3rem}.blue{color:#60a5fa}.gold{color:#f5a623}.purple{color:#a78bfa}.hero p{font-size:1.25rem;color:#dbe4f0;max-width:720px}.hero-buttons{display:flex;gap:1rem;margin-top:2rem;flex-wrap:wrap}.btn{padding:14px 24px;border-radius:14px;font-weight:700;transition:.3s}.btn-primary{background:#f5a623;color:#050816}.btn-secondary{border:1px solid rgba(255,255,255,.15);background:#111827}.btn:hover{transform:translateY(-3px)}
+.hero-card{background:#111827;border:1px solid rgba(255,255,255,.08);border-radius:24px;padding:2rem;box-shadow:0 10px 30px rgba(0,0,0,.3)}.stats-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1rem}.stat-box{background:#1e293b;padding:1.2rem;border-radius:16px}.stat-box h3{margin:0 0 .4rem;font-size:.95rem;color:#cbd5e1}.stat-box p{margin:0;font-size:1.3rem;font-weight:700}
+.quick-access{padding:2rem 5%}.quick-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:1rem}.quick-card{background:#151b2f;padding:1.3rem;border-radius:18px;text-align:center;border:1px solid rgba(255,255,255,.06);transition:.3s}.quick-card:hover{transform:translateY(-5px);border-color:#f5a623}.quick-card div{font-size:2rem;margin-bottom:.6rem}
+section{padding:3.5rem 5%}.section-header{text-align:center;margin-bottom:2rem}.section-header h2{font-size:2.8rem;margin:0}.grid-4,.grid-3{display:grid;gap:1.5rem}.grid-4{grid-template-columns:repeat(4,1fr)}.grid-3{grid-template-columns:repeat(3,1fr)}.card{background:#151b2f;padding:1.8rem;border-radius:22px;border:1px solid rgba(255,255,255,.08);transition:.35s;box-shadow:0 10px 30px rgba(0,0,0,.2)}.card:hover{transform:translateY(-6px);border-color:#f5a623}.card-thumb{font-size:2.4rem;margin-bottom:1rem}.card h3{margin:.3rem 0 .7rem;font-size:1.4rem}.card p{color:#d1d5db;font-size:1rem}.alt-bg{background:#0b1225}
+.featured{padding:2rem 5% 1rem}.featured-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1.3rem}.feature-card{background:#111827;border:1px solid rgba(255,255,255,.08);padding:1.5rem;border-radius:18px}.feature-card span{color:#f5a623;font-size:.9rem;font-weight:700}.feature-card h3{margin:.8rem 0}.footer{text-align:center;padding:2rem;color:#94a3b8;border-top:1px solid rgba(255,255,255,.06);margin-top:2rem}
+@media(max-width:1100px){.hero-grid{grid-template-columns:1fr}.quick-grid,.featured-grid{grid-template-columns:repeat(2,1fr)}.grid-4{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:768px){.nav-links{display:none}.hero h1{font-size:2.8rem}.hero p{font-size:1rem}.quick-grid,.featured-grid,.grid-4,.grid-3,.stats-grid{grid-template-columns:1fr}.section-header h2{font-size:2rem}.hero-buttons{flex-direction:column}}
 </style>
 </head>
 <body>
 <nav>
-<div class="logo-container">
-<span class="logo-text">R B Finance</span>
+<div class="logo-text">R B Finance</div>
+<div class="nav-links">
+<a href="#finance">Accounts</a>
+<a href="gst.html">GST</a>
+<a href="#analytics">Power BI</a>
+<a href="#trading">Trading</a>
+<a href="#automation">AI Tools</a>
+<a href="finance.html">Research</a>
 </div>
 </nav>
 <section class="hero">
-<h1>
-Finance + 
-<span class="blue">Analytics</span> + 
-<span class="gold">Trading</span> + 
-<span class="purple">AI</span>
-</h1>
-<p>
-Building a modern ecosystem for <span>Financial Intelligence</span>, 
-Data Analytics, Smart Trading Strategies, and AI-Powered Automation.
-</p>
+<div class="hero-grid">
+<div>
+<h1>Finance + <span class="blue">Analytics</span> + <span class="gold">Trading</span> + <span class="purple">AI</span></h1>
+<p>Building a modern ecosystem for Financial Intelligence, Data Analytics, Smart Trading Strategies, and AI-Powered Automation.</p>
+<div class="hero-buttons">
+<a href="#finance" class="btn btn-primary">Explore Learning</a>
+<a href="finance.html" class="btn btn-secondary">View Research Reports</a>
+</div>
+</div>
+<div class="hero-card">
+<div class="stats-grid">
+<div class="stat-box"><h3>Learning Modules</h3><p>25+</p></div>
+<div class="stat-box"><h3>Research Reports</h3><p>10+</p></div>
+<div class="stat-box"><h3>GST Chapters</h3><p>15</p></div>
+<div class="stat-box"><h3>AI Projects</h3><p>Upcoming</p></div>
+</div>
+</div>
+</div>
+</section>
+<section class="quick-access">
+<div class="section-header"><h2>Quick Access</h2></div>
+<div class="quick-grid">
+<a href="#finance" class="quick-card"><div>📘</div>Accounts</a>
+<a href="gst.html" class="quick-card"><div>🏛️</div>GST Hub</a>
+<a href="#analytics" class="quick-card"><div>📊</div>Power BI</a>
+<a href="#trading" class="quick-card"><div>📈</div>Trading</a>
+<a href="#automation" class="quick-card"><div>🤖</div>AI Tools</a>
+<a href="finance.html" class="quick-card"><div>⚡</div>Research</a>
+</div>
+</section>
+<section class="featured alt-bg">
+<div class="section-header"><h2>Featured Learning</h2></div>
+<div class="featured-grid">
+<div class="feature-card"><span>GST</span><h3>GST Study Material</h3><p>Chapter-wise GST concepts and practical learning resources.</p></div>
+<div class="feature-card"><span>Analytics</span><h3>Power BI Dashboard</h3><p>Interactive reporting and visualization learning content.</p></div>
+<div class="feature-card"><span>Trading</span><h3>Equity Research</h3><p>Company analysis reports and valuation insights.</p></div>
+<div class="feature-card"><span>AI</span><h3>Automation Systems</h3><p>AI workflows and productivity tools for finance professionals.</p></div>
+</div>
 </section>
 <section id="finance">
-<div class="section-header">
-<h2>Accounts & Finance</h2>
-</div>
+<div class="section-header"><h2>Accounts & Finance</h2></div>
 <div class="grid-4">
 <div class="card"><div class="card-thumb">📘</div><h3>Accounting</h3><p>Financial statements, journal entries and reconciliations.</p></div>
 <div class="card"><div class="card-thumb">🧾</div><h3>Income Tax</h3><p>Direct tax laws, filing procedures and TDS concepts.</p></div>
@@ -93,17 +90,17 @@ Data Analytics, Smart Trading Strategies, and AI-Powered Automation.
 <section id="trading">
 <div class="section-header"><h2>Trading & Research</h2></div>
 <div class="grid-3">
-<div class="card"><div class="card-thumb">📉</div><h3>Trading Dashboard</h3><p>Track market performance.</p></div>
-<div class="card"><div class="card-thumb">📔</div><h3>Trading Journal</h3><p>Monitor setups and psychology.</p></div>
-<a href="finance.html"><div class="card"><div class="card-thumb">⚡</div><h3>Equity Research</h3><p>Research reports, valuation models, and company analysis reports.</p></div></a>
+<div class="card"><div class="card-thumb">📉</div><h3>Trading Dashboard</h3><p>Track market performance and strategies.</p></div>
+<div class="card"><div class="card-thumb">📔</div><h3>Trading Journal</h3><p>Monitor setups, trades and psychology.</p></div>
+<a href="finance.html"><div class="card"><div class="card-thumb">⚡</div><h3>Equity Research</h3><p>Research reports, valuation models and company analysis.</p></div></a>
 </div>
 </section>
 <section id="automation" class="alt-bg">
 <div class="section-header"><h2>AI & Automation</h2></div>
 <div class="grid-3">
 <div class="card"><div class="card-thumb">🤖</div><h3>AI Tools</h3><p>Prompt engineering and GPT workflows.</p></div>
-<div class="card"><div class="card-thumb">⚙️</div><h3>Automation</h3><p>Accounting and reporting automation.</p></div>
-<div class="card"><div class="card-thumb">🚀</div><h3>Future Projects</h3><p>AI-powered finance systems.</p></div>
+<div class="card"><div class="card-thumb">⚙️</div><h3>Automation</h3><p>Accounting and reporting automation systems.</p></div>
+<div class="card"><div class="card-thumb">🚀</div><h3>Future Projects</h3><p>AI-powered finance systems and learning apps.</p></div>
 </div>
 </section>
 <div class="footer">© 2026 R B Finance</div>
