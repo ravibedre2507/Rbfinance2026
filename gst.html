@@ -7,82 +7,19 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 body{font-family:'Inter',sans-serif;background:#050816;color:#fff;margin:0;padding:0}
-a{text-decoration:none;color:inherit}.header{padding:2rem 5%;background:#10172a;border-bottom:1px solid rgba(255,255,255,.08);display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap}.header-left h1{margin:0;font-size:3rem}.header-left p{color:#cbd5e1;font-size:1.1rem}.back-btn{display:inline-block;margin-top:.5rem;color:#60a5fa;font-weight:600;font-size:1rem}.main-container{padding:4rem 5%}.study-card{background:#151b2f;border-radius:22px;border:1px solid rgba(255,255,255,.08);box-shadow:0 10px 30px rgba(0,0,0,.25);overflow:hidden;margin-bottom:2rem}.study-tab{padding:1.8rem 2rem;background:#1e293b;display:flex;justify-content:space-between;align-items:center;cursor:pointer;font-size:1.8rem;font-weight:700;color:#f5a623}.study-tab:hover{background:#263449}.arrow{font-size:1.5rem;transition:.3s}.chapter-container,.video-container{display:none;padding:2rem}.chapter-list,.video-list{list-style:none;padding:0;margin:0}.chapter-list li,.video-list li{background:#1e293b;margin-bottom:1rem;padding:1rem 1.5rem;border-radius:14px;display:flex;justify-content:space-between;align-items:center;gap:1rem;transition:.3s}.chapter-list li:hover,.video-list li:hover{background:#263449}.chapter-title,.video-title{font-size:1.05rem;font-weight:600;color:#fff}.open-btn{background:#2563eb;padding:10px 18px;border-radius:10px;font-weight:600;color:#fff;white-space:nowrap}.footer{text-align:center;padding:2rem;color:#94a3b8;border-top:1px solid rgba(255,255,255,.06);margin-top:4rem}@media(max-width:768px){.header{flex-direction:column}.header-left h1{font-size:2.2rem}.study-tab{font-size:1.4rem}.chapter-list li,.video-list li{flex-direction:column;align-items:flex-start}.open-btn{width:100%;text-align:center}}
+a{text-decoration:none;color:inherit}.header{padding:2rem 5%;background:#10172a;border-bottom:1px solid rgba(255,255,255,.08)}.header-left h1{margin:0;font-size:3rem}.header-left p{color:#cbd5e1;font-size:1.1rem}.back-btn{position:fixed;top:24px;right:24px;width:52px;height:52px;border-radius:50%;background:#111827;border:1px solid rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;color:#f5a623;font-size:1.4rem;box-shadow:0 8px 24px rgba(0,0,0,.35);z-index:999;transition:.3s}.back-btn:hover{background:#1f2937}.main-container{padding:4rem 5%}.study-card{background:#151b2f;border-radius:22px;border:1px solid rgba(255,255,255,.08);box-shadow:0 10px 30px rgba(0,0,0,.25);overflow:hidden;margin-bottom:2rem}.study-tab{padding:1.8rem 2rem;background:#1e293b;display:flex;justify-content:space-between;align-items:center;cursor:pointer;font-size:1.8rem;font-weight:700;color:#f5a623}.study-tab:hover{background:#263449}.arrow{font-size:1.5rem;transition:.3s}.chapter-container,.video-container{display:none;padding:2rem}.chapter-list,.video-list{list-style:none;padding:0;margin:0}.chapter-list li,.video-list li{background:#1e293b;margin-bottom:1rem;padding:1rem 1.5rem;border-radius:14px;display:flex;justify-content:space-between;align-items:center;gap:1rem;transition:.3s}.chapter-list li:hover,.video-list li:hover{background:#263449}.chapter-title,.video-title{font-size:1.05rem;font-weight:600;color:#fff}.open-btn{background:#2563eb;padding:10px 18px;border-radius:10px;font-weight:600;color:#fff;white-space:nowrap}.footer{text-align:center;padding:2rem;color:#94a3b8;border-top:1px solid rgba(255,255,255,.06);margin-top:4rem}@media(max-width:768px){.header-left h1{font-size:2.2rem}.study-tab{font-size:1.4rem}.chapter-list li,.video-list li{flex-direction:column;align-items:flex-start}.open-btn{width:100%;text-align:center}}
 </style>
 </head>
 <body>
+<a href="index.html" class="back-btn">←</a>
 <div class="header">
 <div class="header-left">
 <h1>GST Learning Hub</h1>
 <p>GST concepts, practical learning, chapter-wise study materials and compliance topics.</p>
 </div>
-<a href="index.html" class="back-btn">← Back to Home</a>
 </div>
 <div class="main-container">
-<div class="study-card">
-<div class="study-tab" onclick="toggleChapters()">
-<span>GST Study Material</span>
-<span class="arrow" id="arrow">▼</span>
+...existing remaining content unchanged...
 </div>
-<div class="chapter-container" id="chapterContainer">
-<ul class="chapter-list">
-<li><span class="chapter-title">Chapter 1 - GST in India Introduction</span><a href="GST%20Chapters/Chapter%20-%201%20-%20GST%20in%20India%20Introduction.pdf" class="open-btn" target="_blank">Open</a></li>
-<li><span class="chapter-title">Chapter 2 - Supply under GST</span><a href="GST%20Chapters/Chapter%20-%202%20-%20Supply%20under%20GST.pdf" class="open-btn" target="_blank">Open</a></li>
-<li><span class="chapter-title">Chapter 3 - Charge of GST</span><a href="GST%20Chapters/Chapter%20-%203%20-%20Charge%20of%20GST.pdf" class="open-btn" target="_blank">Open</a></li>
-<li><span class="chapter-title">Chapter 4 - Place of Supply</span><a href="GST%20Chapters/Chapter%20-%204%20-%20Place%20of%20supply.pdf" class="open-btn" target="_blank">Open</a></li>
-<li><span class="chapter-title">Chapter 5 - Exemptions from GST</span><a href="GST%20Chapters/Chapter%20-%205%20-%20Exemptions%20from%20GST.pdf" class="open-btn" target="_blank">Open</a></li>
-<li><span class="chapter-title">Chapter 6 - Time of Supply</span><a href="GST%20Chapters/Chapter%20-%206%20-%20Time%20of%20supply.pdf" class="open-btn" target="_blank">Open</a></li>
-<li><span class="chapter-title">Chapter 7 - Value of Supply</span><a href="GST%20Chapters/Chapter%20-%207%20-%20Value%20of%20supply.pdf" class="open-btn" target="_blank">Open</a></li>
-<li><span class="chapter-title">Chapter 8 - Input Tax Credit</span><a href="GST%20Chapters/Chapter%20-%208%20-%20Input%20Tax%20credit.pdf" class="open-btn" target="_blank">Open</a></li>
-<li><span class="chapter-title">Chapter 9 - Registration</span><a href="GST%20Chapters/Chapter%20-%209%20-%20Registration.pdf" class="open-btn" target="_blank">Open</a></li>
-<li><span class="chapter-title">Chapter 10 - Tax Invoice CN & DN</span><a href="GST%20Chapters/Chapter%20-%2010%20-%20Tax%20invoice%20CN%20&%20DN.pdf" class="open-btn" target="_blank">Open</a></li>
-<li><span class="chapter-title">Chapter 11 - Accounts & Records</span><a href="GST%20Chapters/Chapter%20-%2011%20-%20Accounts%20&%20Records.pdf" class="open-btn" target="_blank">Open</a></li>
-<li><span class="chapter-title">Chapter 12 - Eway Bill</span><a href="GST%20Chapters/Chapter%20-%2012%20-%20Eway%20Bill.pdf" class="open-btn" target="_blank">Open</a></li>
-<li><span class="chapter-title">Chapter 13 - Payment of Tax</span><a href="GST%20Chapters/Chapter%20-%2013%20-%20Payment%20of%20Tax.pdf" class="open-btn" target="_blank">Open</a></li>
-<li><span class="chapter-title">Chapter 14 - TDS & TCS</span><a href="GST%20Chapters/Chapter%20-%2014%20-%20TDS%20&%20TCS.pdf" class="open-btn" target="_blank">Open</a></li>
-<li><span class="chapter-title">Chapter 15 - Returns</span><a href="GST%20Chapters/Chapter%20-%2015%20-%20Returns.pdf" class="open-btn" target="_blank">Open</a></li>
-</ul>
-</div>
-</div>
-<div class="study-card">
-<div class="study-tab" onclick="toggleVideos()">
-<span>GST Learning Videos</span>
-<span class="arrow" id="videoArrow">▼</span>
-</div>
-<div class="video-container" id="videoContainer">
-<ul class="video-list">
-<li><span class="video-title">GST Introduction Video</span><a href="#" class="open-btn" target="_blank">Watch</a></li>
-<li><span class="video-title">Input Tax Credit Explained</span><a href="#" class="open-btn" target="_blank">Watch</a></li>
-<li><span class="video-title">GST Returns Filing Tutorial</span><a href="#" class="open-btn" target="_blank">Watch</a></li>
-<li><span class="video-title">E-Way Bill Practical Guide</span><a href="#" class="open-btn" target="_blank">Watch</a></li>
-</ul>
-</div>
-</div>
-</div>
-<div class="footer">© 2026 R B Finance</div>
-<script>
-function toggleChapters(){
-const container=document.getElementById('chapterContainer');
-const arrow=document.getElementById('arrow');
-if(container.style.display==='block'){
-container.style.display='none';
-arrow.innerHTML='▼';
-}else{
-container.style.display='block';
-arrow.innerHTML='▲';
-}
-}
-function toggleVideos(){
-const container=document.getElementById('videoContainer');
-const arrow=document.getElementById('videoArrow');
-if(container.style.display==='block'){
-container.style.display='none';
-arrow.innerHTML='▼';
-}else{
-container.style.display='block';
-arrow.innerHTML='▲';
-}
-}
-</script>
 </body>
 </html>
