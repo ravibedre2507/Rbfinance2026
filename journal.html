@@ -44,6 +44,7 @@
     .card h2{
       color:#facc15;
       margin-bottom:10px;
+      font-size:20px;
     }
 
     .card p{
@@ -66,6 +67,8 @@
       color:black;
       padding:12px;
       font-size:14px;
+      position:sticky;
+      top:0;
     }
 
     td{
@@ -104,8 +107,18 @@
   </div>
 
   <div class="card">
-    <h2>Total P&L</h2>
+    <h2>Total Gross P&L</h2>
     <p id="totalPnL">0</p>
+  </div>
+
+  <div class="card">
+    <h2>Total Wins</h2>
+    <p id="totalWins" class="profit">0</p>
+  </div>
+
+  <div class="card">
+    <h2>Total Losses</h2>
+    <p id="totalLosses" class="loss">0</p>
   </div>
 
 </div>
@@ -148,29 +161,39 @@ Papa.parse(sheetURL, {
 
         let totalTrades = 0;
         let totalPnL = 0;
+        let totalWins = 0;
+        let totalLosses = 0;
+
+        // Column M = Win/Loss
+        const resultColumnIndex = 12;
+
+        // Column N = Gross P&L
+        const pnlColumnIndex = 13;
 
         // Create Rows
         dataRows.forEach(row => {
 
             tableHTML += "<tr>";
 
-            row.forEach(cell => {
+            row.forEach((cell,index) => {
 
                 let className = "";
 
-                const value = parseFloat(cell);
+                // Highlight Gross P&L Column
+                if(index === pnlColumnIndex){
 
-                if(!isNaN(value)){
+                    const pnlValue = parseFloat(cell.replace(/,/g,''));
 
-                    if(value > 0){
-                        className = "profit";
+                    if(!isNaN(pnlValue)){
+
+                        if(pnlValue > 0){
+                            className = "profit";
+                        }
+
+                        if(pnlValue < 0){
+                            className = "loss";
+                        }
                     }
-
-                    if(value < 0){
-                        className = "loss";
-                    }
-
-                    totalPnL += value;
                 }
 
                 tableHTML += `<td class="${className}">${cell}</td>`;
@@ -181,6 +204,25 @@ Papa.parse(sheetURL, {
 
             totalTrades++;
 
+            // Calculate Total Gross P&L from Column N
+            const pnlCell = row[pnlColumnIndex] || "0";
+            const pnlValue = parseFloat(pnlCell.replace(/,/g,''));
+
+            if(!isNaN(pnlValue)){
+                totalPnL += pnlValue;
+            }
+
+            // Count Wins & Losses from Column M
+            const resultCell = (row[resultColumnIndex] || "").toString().toLowerCase().trim();
+
+            if(resultCell.includes('win')){
+                totalWins++;
+            }
+
+            if(resultCell.includes('loss')){
+                totalLosses++;
+            }
+
         });
 
         document.getElementById("tradeTable").innerHTML = tableHTML;
@@ -189,6 +231,10 @@ Papa.parse(sheetURL, {
 
         document.getElementById("totalPnL").innerText =
             totalPnL.toFixed(2);
+
+        document.getElementById("totalWins").innerText = totalWins;
+
+        document.getElementById("totalLosses").innerText = totalLosses;
 
     }
 
