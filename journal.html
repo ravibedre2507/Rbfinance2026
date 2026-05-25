@@ -11,12 +11,10 @@
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:'Inter',sans-serif;background:#050816;color:#fff;padding:24px}
 .header{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;flex-wrap:wrap;gap:15px}
-h1{font-size:2.2rem;color:#facc15}
-.back-btn{background:#facc15;color:#000;padding:12px 18px;border-radius:12px;font-weight:700;text-decoration:none}
+h1{font-size:2.2rem;color:#facc15}.back-btn{background:#facc15;color:#000;padding:12px 18px;border-radius:12px;font-weight:700;text-decoration:none}
 .dashboard-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px;margin-bottom:28px}
 .card{background:linear-gradient(145deg,#111827,#1e293b);padding:22px;border-radius:20px;border:1px solid rgba(255,255,255,.08);box-shadow:0 10px 30px rgba(0,0,0,.35)}
-.card h3{font-size:1rem;color:#cbd5e1;margin-bottom:10px}
-.card p{font-size:2rem;font-weight:800}
+.card h3{font-size:1rem;color:#cbd5e1;margin-bottom:10px}.card p{font-size:2rem;font-weight:800}
 .profit{color:#22c55e}.loss{color:#ef4444}
 .chart-card{background:#111827;border-radius:22px;padding:20px;border:1px solid rgba(255,255,255,.08);margin-bottom:28px}
 .chart-title{font-size:1.3rem;font-weight:700;margin-bottom:18px;color:#facc15}
@@ -26,12 +24,9 @@ h1{font-size:2.2rem;color:#facc15}
 table{width:100%;border-collapse:collapse}
 th{background:#facc15;color:#000;padding:14px;font-size:.9rem;position:sticky;top:0}
 td{padding:12px;border-bottom:1px solid #1f2937;text-align:center;font-size:.9rem}
-tr:hover{background:#172033}
-.win-row{background:rgba(34,197,94,.06)}
-.loss-row{background:rgba(239,68,68,.05)}
+tr:hover{background:#172033}.win-row{background:rgba(34,197,94,.06)}.loss-row{background:rgba(239,68,68,.05)}
 .badge{padding:6px 10px;border-radius:999px;font-size:.8rem;font-weight:700}
-.badge-win{background:rgba(34,197,94,.15);color:#22c55e}
-.badge-loss{background:rgba(239,68,68,.15);color:#ef4444}
+.badge-win{background:rgba(34,197,94,.15);color:#22c55e}.badge-loss{background:rgba(239,68,68,.15);color:#ef4444}
 @media(max-width:768px){body{padding:16px}h1{font-size:1.7rem}.card p{font-size:1.6rem}}
 </style>
 </head>
@@ -74,6 +69,7 @@ let totalTrades=0,totalPnL=0,totalWins=0,totalLosses=0;
 let cumulativePnL=[];
 let runningPnL=0;
 let labels=[];
+let shownMonths=[];
 let tableHead='<tr>';
 headers.forEach(header=>{tableHead+=`<th>${header}</th>`});
 tableHead+='</tr>';
@@ -89,12 +85,19 @@ let formattedLabel='';
 if(rawDate.includes('/')){
 const parts=rawDate.split('/');
 if(parts.length===3){
-formattedLabel=`${parts[1]}/${parts[2]}`;
+const monthNames=['January','February','March','April','May','June','July','August','September','October','November','December'];
+const monthIndex=parseInt(parts[1])-1;
+const year=parts[2];
+const currentMonth=`${monthNames[monthIndex]} - ${year}`;
+if(!shownMonths.includes(currentMonth)){
+formattedLabel=currentMonth;
+shownMonths.push(currentMonth);
 }else{
-formattedLabel=rawDate;
+formattedLabel='';
 }
 }else{
-formattedLabel=rawDate || `Trade ${rowIndex+1}`;
+formattedLabel='';
+}
 }
 labels.push(formattedLabel);
 const resultCell=(row[resultColumnIndex]||'').toString().toLowerCase().trim();
