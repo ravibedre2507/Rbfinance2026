@@ -10,7 +10,10 @@
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:'Inter',sans-serif;background:#050816;color:#fff;padding:24px}
 .header{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;flex-wrap:wrap;gap:15px}
-h1{font-size:2.2rem;color:#facc15}.back-btn{background:#facc15;color:#000;padding:12px 18px;border-radius:12px;font-weight:700;text-decoration:none}
+.header-actions{display:flex;gap:12px;align-items:center}
+h1{font-size:2.2rem;color:#facc15}
+.back-btn,.export-btn{background:#facc15;color:#000;padding:12px 18px;border-radius:12px;font-weight:700;text-decoration:none;border:none;cursor:pointer;font-size:.95rem}
+.export-btn{background:#22c55e;color:white}
 .dashboard-grid{display:grid;grid-template-columns:repeat(7,minmax(180px,1fr));gap:18px;margin-bottom:28px;overflow-x:auto}
 .card{background:linear-gradient(145deg,#111827,#1e293b);padding:20px;border-radius:20px;border:1px solid rgba(255,255,255,.08);box-shadow:0 10px 30px rgba(0,0,0,.35);min-width:180px}
 .card h3{font-size:.95rem;color:#cbd5e1;margin-bottom:10px}.card p{font-size:1.7rem;font-weight:800}
@@ -30,7 +33,10 @@ tr:hover{background:#172033}.win-row{background:rgba(34,197,94,.06)}.loss-row{ba
 <body>
 <div class="header">
 <h1>📈 Trading Journal Dashboard</h1>
+<div class="header-actions">
+<button class="export-btn" onclick="exportTableToCSV()">⬇ Export XLS</button>
 <a href="index.html" class="back-btn">← Back to Home</a>
+</div>
 </div>
 <div class="dashboard-grid">
 <div class="card"><h3>Total Trades</h3><p id="totalTrades">0</p></div>
@@ -45,7 +51,7 @@ tr:hover{background:#172033}.win-row{background:rgba(34,197,94,.06)}.loss-row{ba
 <input type="text" id="searchInput" class="search-box" placeholder="Search Stock / Setup...">
 </div>
 <div class="table-container">
-<table>
+<table id="journalTable">
 <thead id="tableHead"></thead>
 <tbody id="tradeTable"></tbody>
 </table>
@@ -80,8 +86,8 @@ row.forEach((cell,index)=>{
 let className='';
 let displayCell=cell;
 if(index===resultColumnIndex){
-if(resultCell.includes('win')){displayCell='<span class="badge badge-win">WIN</span>'}
-if(resultCell.includes('loss')){displayCell='<span class="badge badge-loss">LOSS</span>'}
+if(resultCell.includes('win')){displayCell='WIN'}
+if(resultCell.includes('loss')){displayCell='LOSS'}
 }
 if(index===pnlColumnIndex){
 if(pnlValue>0){className='profit'}
@@ -109,6 +115,23 @@ row.style.display=text.includes(filter)?'':'none';
 });
 });
 }});
+function exportTableToCSV(){
+let csv=[];
+const rows=document.querySelectorAll('table tr');
+rows.forEach(row=>{
+const cols=row.querySelectorAll('td, th');
+const rowData=[];
+cols.forEach(col=>rowData.push(col.innerText));
+csv.push(rowData.join(','));
+});
+const csvFile=new Blob([csv.join('\n')],{type:'text/csv'});
+const downloadLink=document.createElement('a');
+downloadLink.download='Trading_Journal.xls';
+downloadLink.href=window.URL.createObjectURL(csvFile);
+downloadLink.style.display='none';
+document.body.appendChild(downloadLink);
+downloadLink.click();
+}
 </script>
 </body>
 </html>
