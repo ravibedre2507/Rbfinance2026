@@ -299,19 +299,19 @@ const fyFilter = document.getElementById('fyFilter');
 const categoryFilter = document.getElementById('categoryFilter');
 const monthFilter = document.getElementById('monthFilter');
 
-const monthChartCanvas = document.getElementById('monthChart');
-
 let monthChart;
+let categoryChart;
+let winLossChart;
+let fyChart;
 
 function filterData(){
 
-let filtered = rawData.filter(item => {
+const filtered = rawData.filter(item => {
 
 return (
 (fyFilter.value === 'All' || fyFilter.value === 'All F.Y.' || item.fy === fyFilter.value) &&
 (categoryFilter.value === 'All' || categoryFilter.value === 'All Categories' || item.category === categoryFilter.value) &&
 (monthFilter.value === 'All' || monthFilter.value === 'All Months' || item.month === monthFilter.value)
-
 );
 
 });
@@ -322,29 +322,32 @@ updateDashboard(filtered);
 
 function updateDashboard(data){
 
-const labels = data.map(d => d.month);
+const totalProfit = data.reduce((a,b)=>a+b.profit,0);
+const totalLoss = data.reduce((a,b)=>a+b.loss,0);
+const grossPL = totalProfit - totalLoss;
 
-const profits = data.map(d => d.profit);
+document.querySelectorAll('.card p')[0].innerText = totalProfit;
+document.querySelectorAll('.card p')[1].innerText = totalLoss;
+document.querySelectorAll('.card p')[2].innerText = grossPL;
 
-const losses = data.map(d => d.loss);
+if(monthChart) monthChart.destroy();
+if(categoryChart) categoryChart.destroy();
+if(winLossChart) winLossChart.destroy();
+if(fyChart) fyChart.destroy();
 
-if(monthChart){
-monthChart.destroy();
-}
-
-monthChart = new Chart(monthChartCanvas,{
+monthChart = new Chart(document.getElementById('monthChart'),{
 type:'bar',
 data:{
-labels:labels,
+labels:data.map(d=>d.month),
 datasets:[
 {
 label:'Profit',
-data:profits,
+data:data.map(d=>d.profit),
 backgroundColor:'#65a30d'
 },
 {
 label:'Loss',
-data:losses,
+data:data.map(d=>d.loss),
 backgroundColor:'#ef4444'
 }
 ]
@@ -357,55 +360,35 @@ labels:{color:'white'}
 }
 },
 scales:{
-x:{
-ticks:{color:'white'}
-},
-y:{
-ticks:{color:'white'}
-}
+x:{ticks:{color:'white'}},
+y:{ticks:{color:'white'}}
 }
 }
 });
 
-const totalProfit = data.reduce((a,b)=>a+b.profit,0);
-const totalLoss = data.reduce((a,b)=>a+b.loss,0);
-
-document.querySelectorAll('.card p')[0].innerText = totalProfit;
-document.querySelectorAll('.card p')[1].innerText = totalLoss;
-
-}
-// DESTROY OLD CHARTS
-
-if(window.categoryChartInstance){
-window.categoryChartInstance.destroy();
-}
-
-if(window.winLossChartInstance){
-window.winLossChartInstance.destroy();
-}
-
-if(window.fyChartInstance){
-window.fyChartInstance.destroy();
-}
-
-
-// CATEGORY CHART
-
-window.categoryChartInstance = new Chart(
-document.getElementById('categoryChart'),
-{
+categoryChart = new Chart(document.getElementById('categoryChart'),{
 type:'bar',
 data:{
 labels:['SWING','IPO','INTRADAY','DIVIDEND'],
 datasets:[
 {
 label:'Profit',
-data:[47891,109608,22507,6945],
+data:[
+47891,
+109608,
+22507,
+6945
+],
 backgroundColor:'#65a30d'
 },
 {
 label:'Loss',
-data:[19233,0,20386,0],
+data:[
+19233,
+0,
+20386,
+0
+],
 backgroundColor:'#ef4444'
 }
 ]
@@ -418,22 +401,13 @@ labels:{color:'white'}
 }
 },
 scales:{
-x:{
-ticks:{color:'white'}
-},
-y:{
-ticks:{color:'white'}
-}
+x:{ticks:{color:'white'}},
+y:{ticks:{color:'white'}}
 }
 }
 });
 
-
-// WIN LOSS CHART
-
-window.winLossChartInstance = new Chart(
-document.getElementById('winLossChart'),
-{
+winLossChart = new Chart(document.getElementById('winLossChart'),{
 type:'bar',
 data:{
 labels:['Wins','Losses'],
@@ -456,38 +430,25 @@ labels:{color:'white'}
 }
 },
 scales:{
-x:{
-ticks:{color:'white'}
-},
-y:{
-ticks:{color:'white'}
-}
+x:{ticks:{color:'white'}},
+y:{ticks:{color:'white'}}
 }
 }
 });
 
-
-// FY CHART
-
-window.fyChartInstance = new Chart(
-document.getElementById('fyChart'),
-{
+fyChart = new Chart(document.getElementById('fyChart'),{
 type:'bar',
 data:{
 labels:['2025-26'],
 datasets:[
 {
 label:'Profit',
-data:[
-data.reduce((a,b)=>a+b.profit,0)
-],
+data:[totalProfit],
 backgroundColor:'#65a30d'
 },
 {
 label:'Loss',
-data:[
-data.reduce((a,b)=>a+b.loss,0)
-],
+data:[totalLoss],
 backgroundColor:'#ef4444'
 }
 ]
@@ -500,20 +461,21 @@ labels:{color:'white'}
 }
 },
 scales:{
-x:{
-ticks:{color:'white'}
-},
-y:{
-ticks:{color:'white'}
-}
+x:{ticks:{color:'white'}},
+y:{ticks:{color:'white'}}
 }
 }
 });
+
+}
+
 fyFilter.addEventListener('change', filterData);
 categoryFilter.addEventListener('change', filterData);
 monthFilter.addEventListener('change', filterData);
 
 filterData();
+
+</script>
 
 </script>
 
