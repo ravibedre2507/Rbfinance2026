@@ -1,246 +1,134 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <title>Trading Journal Dashboard</title>
-
-  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
-
-  <style>
-
-    body{
-      margin:0;
-      padding:20px;
-      background:#0f172a;
-      color:white;
-      font-family:Arial,sans-serif;
-    }
-
-    h1{
-      text-align:center;
-      color:#facc15;
-      margin-bottom:30px;
-    }
-
-    .summary{
-      display:flex;
-      gap:20px;
-      margin-bottom:30px;
-      flex-wrap:wrap;
-    }
-
-    .card{
-      background:#111827;
-      padding:20px;
-      border-radius:12px;
-      flex:1;
-      min-width:220px;
-      text-align:center;
-      border:1px solid #374151;
-    }
-
-    .card h2{
-      color:#facc15;
-      margin-bottom:10px;
-      font-size:20px;
-    }
-
-    .card p{
-      font-size:28px;
-      font-weight:bold;
-    }
-
-    .table-container{
-      overflow-x:auto;
-    }
-
-    table{
-      width:100%;
-      border-collapse:collapse;
-      background:#111827;
-    }
-
-    th{
-      background:#facc15;
-      color:black;
-      padding:12px;
-      font-size:14px;
-      position:sticky;
-      top:0;
-    }
-
-    td{
-      padding:10px;
-      border-bottom:1px solid #374151;
-      text-align:center;
-      font-size:14px;
-    }
-
-    tr:hover{
-      background:#1f2937;
-    }
-
-    .profit{
-      color:#22c55e;
-      font-weight:bold;
-    }
-
-    .loss{
-      color:#ef4444;
-      font-weight:bold;
-    }
-
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Trading Journal Dashboard</title>
+<script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',sans-serif;background:#050816;color:#fff;padding:24px}
+.header{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;flex-wrap:wrap;gap:15px}
+h1{font-size:2.2rem;color:#facc15}
+.back-btn{background:#facc15;color:#000;padding:12px 18px;border-radius:12px;font-weight:700;text-decoration:none}
+.dashboard-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px;margin-bottom:28px}
+.card{background:linear-gradient(145deg,#111827,#1e293b);padding:22px;border-radius:20px;border:1px solid rgba(255,255,255,.08);box-shadow:0 10px 30px rgba(0,0,0,.35)}
+.card h3{font-size:1rem;color:#cbd5e1;margin-bottom:10px}
+.card p{font-size:2rem;font-weight:800}
+.profit{color:#22c55e}
+.loss{color:#ef4444}
+.chart-card{background:#111827;border-radius:22px;padding:20px;border:1px solid rgba(255,255,255,.08);margin-bottom:28px}
+.chart-title{font-size:1.3rem;font-weight:700;margin-bottom:18px;color:#facc15}
+.controls{display:flex;justify-content:space-between;gap:15px;flex-wrap:wrap;margin-bottom:18px}
+.search-box{padding:12px 16px;border-radius:12px;border:none;background:#1e293b;color:white;min-width:250px}
+.table-container{overflow-x:auto;background:#111827;border-radius:20px;border:1px solid rgba(255,255,255,.08)}
+table{width:100%;border-collapse:collapse}
+th{background:#facc15;color:#000;padding:14px;font-size:.9rem;position:sticky;top:0}
+td{padding:12px;border-bottom:1px solid #1f2937;text-align:center;font-size:.9rem}
+tr:hover{background:#172033}
+.win-row{background:rgba(34,197,94,.06)}
+.loss-row{background:rgba(239,68,68,.05)}
+.badge{padding:6px 10px;border-radius:999px;font-size:.8rem;font-weight:700}
+.badge-win{background:rgba(34,197,94,.15);color:#22c55e}
+.badge-loss{background:rgba(239,68,68,.15);color:#ef4444}
+@media(max-width:768px){body{padding:16px}h1{font-size:1.7rem}.card p{font-size:1.6rem}}
+</style>
 </head>
-
 <body>
-
-<h1>Trading Journal Dashboard</h1>
-
-<div class="summary">
-
-  <div class="card">
-    <h2>Total Trades</h2>
-    <p id="totalTrades">0</p>
-  </div>
-
-  <div class="card">
-    <h2>Total Gross P&L</h2>
-    <p id="totalPnL">0</p>
-  </div>
-
-  <div class="card">
-    <h2>Total Wins</h2>
-    <p id="totalWins" class="profit">0</p>
-  </div>
-
-  <div class="card">
-    <h2>Total Losses</h2>
-    <p id="totalLosses" class="loss">0</p>
-  </div>
-
+<div class="header">
+<h1>📈 Trading Journal Dashboard</h1>
+<a href="index.html" class="back-btn">← Back to Home</a>
 </div>
-
+<div class="dashboard-grid">
+<div class="card"><h3>Total Trades</h3><p id="totalTrades">0</p></div>
+<div class="card"><h3>Net P&L</h3><p id="totalPnL">0</p></div>
+<div class="card"><h3>Winning Trades</h3><p id="totalWins" class="profit">0</p></div>
+<div class="card"><h3>Losing Trades</h3><p id="totalLosses" class="loss">0</p></div>
+<div class="card"><h3>Win Rate</h3><p id="winRate">0%</p></div>
+<div class="card"><h3>Average P&L</h3><p id="avgPnL">0</p></div>
+</div>
+<div class="chart-card">
+<div class="chart-title">Performance Analytics</div>
+<canvas id="pnlChart"></canvas>
+</div>
+<div class="controls">
+<input type="text" id="searchInput" class="search-box" placeholder="Search Stock / Setup...">
+</div>
 <div class="table-container">
-  <table id="tradeTable"></table>
+<table>
+<thead id="tableHead"></thead>
+<tbody id="tradeTable"></tbody>
+</table>
 </div>
-
 <script>
-
-const sheetURL =
-"https://docs.google.com/spreadsheets/d/e/2PACX-1vRbSrzX6IexJncqPlRZcpI4FxuSgliicUnB5_-zz3SLRGcquh_xZYpmXammjO4VTkp72s8PY8Eu1yaZ/pub?gid=1077617715&single=true&output=csv";
-
-Papa.parse(sheetURL, {
-
-    download: true,
-
-    complete: function(results) {
-
-        const rows = results.data;
-
-        // Header row = Row 7
-        const headers = rows[6];
-
-        // Trade rows start from Row 8
-        const dataRows = rows.slice(7).filter(row =>
-            row.some(cell => cell.trim() !== "")
-        );
-
-        let tableHTML = "";
-
-        // Create Header
-        tableHTML += "<tr>";
-
-        headers.forEach(header => {
-            tableHTML += `<th>${header}</th>`;
-        });
-
-        tableHTML += "</tr>";
-
-        let totalTrades = 0;
-        let totalPnL = 0;
-        let totalWins = 0;
-        let totalLosses = 0;
-
-        // Column M = Win/Loss
-        const resultColumnIndex = 12;
-
-        // Column N = Gross P&L
-        const pnlColumnIndex = 13;
-
-        // Create Rows
-        dataRows.forEach(row => {
-
-            tableHTML += "<tr>";
-
-            row.forEach((cell,index) => {
-
-                let className = "";
-
-                // Highlight Gross P&L Column
-                if(index === pnlColumnIndex){
-
-                    const pnlValue = parseFloat(cell.replace(/,/g,''));
-
-                    if(!isNaN(pnlValue)){
-
-                        if(pnlValue > 0){
-                            className = "profit";
-                        }
-
-                        if(pnlValue < 0){
-                            className = "loss";
-                        }
-                    }
-                }
-
-                tableHTML += `<td class="${className}">${cell}</td>`;
-
-            });
-
-            tableHTML += "</tr>";
-
-            totalTrades++;
-
-            // Calculate Total Gross P&L from Column N
-            const pnlCell = row[pnlColumnIndex] || "0";
-            const pnlValue = parseFloat(pnlCell.replace(/,/g,''));
-
-            if(!isNaN(pnlValue)){
-                totalPnL += pnlValue;
-            }
-
-            // Count Wins & Losses from Column M
-            const resultCell = (row[resultColumnIndex] || "").toString().toLowerCase().trim();
-
-            if(resultCell.includes('win')){
-                totalWins++;
-            }
-
-            if(resultCell.includes('loss')){
-                totalLosses++;
-            }
-
-        });
-
-        document.getElementById("tradeTable").innerHTML = tableHTML;
-
-        document.getElementById("totalTrades").innerText = totalTrades;
-
-        document.getElementById("totalPnL").innerText =
-            totalPnL.toFixed(2);
-
-        document.getElementById("totalWins").innerText = totalWins;
-
-        document.getElementById("totalLosses").innerText = totalLosses;
-
-    }
-
+const sheetURL='https://docs.google.com/spreadsheets/d/e/2PACX-1vRbSrzX6IexJncqPlRZcpI4FxuSgliicUnB5_-zz3SLRGcquh_xZYpmXammjO4VTkp72s8PY8Eu1yaZ/pub?gid=1077617715&single=true&output=csv';
+Papa.parse(sheetURL,{download:true,complete:function(results){
+const rows=results.data;
+const headers=rows[6];
+const dataRows=rows.slice(7).filter(row=>row.some(cell=>cell.trim()!==''));
+const resultColumnIndex=12;
+const pnlColumnIndex=13;
+let totalTrades=0,totalPnL=0,totalWins=0,totalLosses=0;
+let cumulativePnL=[];
+let runningPnL=0;
+let labels=[];
+let tableHead='<tr>';
+headers.forEach(header=>{tableHead+=`<th>${header}</th>`});
+tableHead+='</tr>';
+document.getElementById('tableHead').innerHTML=tableHead;
+let tableHTML='';
+dataRows.forEach((row,rowIndex)=>{
+const pnlCell=row[pnlColumnIndex]||'0';
+const pnlValue=parseFloat(pnlCell.toString().replace(/,/g,''))||0;
+runningPnL+=pnlValue;
+cumulativePnL.push(runningPnL);
+labels.push(`Trade ${rowIndex+1}`);
+const resultCell=(row[resultColumnIndex]||'').toString().toLowerCase().trim();
+let rowClass='';
+if(resultCell.includes('win')){totalWins++;rowClass='win-row'}
+if(resultCell.includes('loss')){totalLosses++;rowClass='loss-row'}
+totalTrades++;
+totalPnL+=pnlValue;
+tableHTML+=`<tr class="${rowClass}">`;
+row.forEach((cell,index)=>{
+let className='';
+let displayCell=cell;
+if(index===resultColumnIndex){
+if(resultCell.includes('win')){displayCell='<span class="badge badge-win">WIN</span>'}
+if(resultCell.includes('loss')){displayCell='<span class="badge badge-loss">LOSS</span>'}
+}
+if(index===pnlColumnIndex){
+if(pnlValue>0){className='profit'}
+if(pnlValue<0){className='loss'}
+}
+tableHTML+=`<td class="${className}">${displayCell}</td>`;
 });
-
+tableHTML+='</tr>';
+});
+document.getElementById('tradeTable').innerHTML=tableHTML;
+document.getElementById('totalTrades').innerText=totalTrades;
+document.getElementById('totalPnL').innerText=totalPnL.toFixed(2);
+document.getElementById('totalWins').innerText=totalWins;
+document.getElementById('totalLosses').innerText=totalLosses;
+document.getElementById('winRate').innerText=((totalWins/totalTrades)*100 || 0).toFixed(1)+'%';
+document.getElementById('avgPnL').innerText=(totalPnL/totalTrades || 0).toFixed(2);
+new Chart(document.getElementById('pnlChart'),{
+type:'line',
+data:{labels:labels,datasets:[{label:'Equity Curve',data:cumulativePnL,borderColor:'#facc15',backgroundColor:'rgba(250,204,21,0.15)',tension:.3,fill:true}]},
+options:{responsive:true,plugins:{legend:{labels:{color:'white'}}},scales:{x:{ticks:{color:'#cbd5e1'}},y:{ticks:{color:'#cbd5e1'}}}}
+});
+const searchInput=document.getElementById('searchInput');
+searchInput.addEventListener('keyup',function(){
+const filter=this.value.toLowerCase();
+const rows=document.querySelectorAll('#tradeTable tr');
+rows.forEach(row=>{
+const text=row.innerText.toLowerCase();
+row.style.display=text.includes(filter)?'':'none';
+});
+});
+}});
 </script>
-
 </body>
 </html>
