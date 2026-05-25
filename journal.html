@@ -17,8 +17,7 @@ h1{font-size:2.2rem;color:#facc15}
 .card{background:linear-gradient(145deg,#111827,#1e293b);padding:22px;border-radius:20px;border:1px solid rgba(255,255,255,.08);box-shadow:0 10px 30px rgba(0,0,0,.35)}
 .card h3{font-size:1rem;color:#cbd5e1;margin-bottom:10px}
 .card p{font-size:2rem;font-weight:800}
-.profit{color:#22c55e}
-.loss{color:#ef4444}
+.profit{color:#22c55e}.loss{color:#ef4444}
 .chart-card{background:#111827;border-radius:22px;padding:20px;border:1px solid rgba(255,255,255,.08);margin-bottom:28px}
 .chart-title{font-size:1.3rem;font-weight:700;margin-bottom:18px;color:#facc15}
 .controls{display:flex;justify-content:space-between;gap:15px;flex-wrap:wrap;margin-bottom:18px}
@@ -70,6 +69,7 @@ const headers=rows[6];
 const dataRows=rows.slice(7).filter(row=>row.some(cell=>cell.trim()!==''));
 const resultColumnIndex=12;
 const pnlColumnIndex=13;
+const dateColumnIndex=0;
 let totalTrades=0,totalPnL=0,totalWins=0,totalLosses=0;
 let cumulativePnL=[];
 let runningPnL=0;
@@ -84,7 +84,15 @@ const pnlCell=row[pnlColumnIndex]||'0';
 const pnlValue=parseFloat(pnlCell.toString().replace(/,/g,''))||0;
 runningPnL+=pnlValue;
 cumulativePnL.push(runningPnL);
-labels.push(`Trade ${rowIndex+1}`);
+const rawDate=row[dateColumnIndex] || `Trade ${rowIndex+1}`;
+const tradeDate=new Date(rawDate);
+let formattedLabel;
+if(!isNaN(tradeDate)){
+formattedLabel=tradeDate.toLocaleDateString('en-IN',{month:'short',year:'numeric'});
+}else{
+formattedLabel=rawDate;
+}
+labels.push(formattedLabel);
 const resultCell=(row[resultColumnIndex]||'').toString().toLowerCase().trim();
 let rowClass='';
 if(resultCell.includes('win')){totalWins++;rowClass='win-row'}
@@ -117,7 +125,7 @@ document.getElementById('avgPnL').innerText=(totalPnL/totalTrades || 0).toFixed(
 new Chart(document.getElementById('pnlChart'),{
 type:'line',
 data:{labels:labels,datasets:[{label:'Equity Curve',data:cumulativePnL,borderColor:'#facc15',backgroundColor:'rgba(250,204,21,0.15)',tension:.3,fill:true}]},
-options:{responsive:true,plugins:{legend:{labels:{color:'white'}}},scales:{x:{ticks:{color:'#cbd5e1'}},y:{ticks:{color:'#cbd5e1'}}}}
+options:{responsive:true,plugins:{legend:{labels:{color:'white'}}},scales:{x:{ticks:{color:'#cbd5e1',maxRotation:45,minRotation:45}},y:{ticks:{color:'#cbd5e1'}}}}
 });
 const searchInput=document.getElementById('searchInput');
 searchInput.addEventListener('keyup',function(){
