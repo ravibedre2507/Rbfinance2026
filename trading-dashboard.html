@@ -374,9 +374,26 @@ document.querySelectorAll('.card p')[0].innerText = totalProfit;
 document.querySelectorAll('.card p')[1].innerText = totalLoss;
 
 }
+// DESTROY OLD CHARTS
+
+if(window.categoryChartInstance){
+window.categoryChartInstance.destroy();
+}
+
+if(window.winLossChartInstance){
+window.winLossChartInstance.destroy();
+}
+
+if(window.fyChartInstance){
+window.fyChartInstance.destroy();
+}
+
+
 // CATEGORY CHART
 
-new Chart(document.getElementById('categoryChart'),{
+window.categoryChartInstance = new Chart(
+document.getElementById('categoryChart'),
+{
 type:'bar',
 data:{
 labels:['SWING','IPO','INTRADAY','DIVIDEND'],
@@ -392,12 +409,31 @@ data:[19233,0,20386,0],
 backgroundColor:'#ef4444'
 }
 ]
+},
+options:{
+responsive:true,
+plugins:{
+legend:{
+labels:{color:'white'}
+}
+},
+scales:{
+x:{
+ticks:{color:'white'}
+},
+y:{
+ticks:{color:'white'}
+}
+}
 }
 });
 
+
 // WIN LOSS CHART
 
-new Chart(document.getElementById('winLossChart'),{
+window.winLossChartInstance = new Chart(
+document.getElementById('winLossChart'),
+{
 type:'bar',
 data:{
 labels:['Wins','Losses'],
@@ -411,12 +447,31 @@ data.reduce((a,b)=>a+b.losses,0)
 backgroundColor:['#65a30d','#ef4444']
 }
 ]
+},
+options:{
+responsive:true,
+plugins:{
+legend:{
+labels:{color:'white'}
+}
+},
+scales:{
+x:{
+ticks:{color:'white'}
+},
+y:{
+ticks:{color:'white'}
+}
+}
 }
 });
 
+
 // FY CHART
 
-new Chart(document.getElementById('fyChart'),{
+window.fyChartInstance = new Chart(
+document.getElementById('fyChart'),
+{
 type:'bar',
 data:{
 labels:['2025-26'],
@@ -436,6 +491,22 @@ data.reduce((a,b)=>a+b.loss,0)
 backgroundColor:'#ef4444'
 }
 ]
+},
+options:{
+responsive:true,
+plugins:{
+legend:{
+labels:{color:'white'}
+}
+},
+scales:{
+x:{
+ticks:{color:'white'}
+},
+y:{
+ticks:{color:'white'}
+}
+}
 }
 });
 fyFilter.addEventListener('change', filterData);
