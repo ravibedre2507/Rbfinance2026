@@ -374,7 +374,70 @@ document.querySelectorAll('.card p')[0].innerText = totalProfit;
 document.querySelectorAll('.card p')[1].innerText = totalLoss;
 
 }
+// CATEGORY CHART
 
+new Chart(document.getElementById('categoryChart'),{
+type:'bar',
+data:{
+labels:['SWING','IPO','INTRADAY','DIVIDEND'],
+datasets:[
+{
+label:'Profit',
+data:[47891,109608,22507,6945],
+backgroundColor:'#65a30d'
+},
+{
+label:'Loss',
+data:[19233,0,20386,0],
+backgroundColor:'#ef4444'
+}
+]
+}
+});
+
+// WIN LOSS CHART
+
+new Chart(document.getElementById('winLossChart'),{
+type:'bar',
+data:{
+labels:['Wins','Losses'],
+datasets:[
+{
+label:'Trades',
+data:[
+data.reduce((a,b)=>a+b.wins,0),
+data.reduce((a,b)=>a+b.losses,0)
+],
+backgroundColor:['#65a30d','#ef4444']
+}
+]
+}
+});
+
+// FY CHART
+
+new Chart(document.getElementById('fyChart'),{
+type:'bar',
+data:{
+labels:['2025-26'],
+datasets:[
+{
+label:'Profit',
+data:[
+data.reduce((a,b)=>a+b.profit,0)
+],
+backgroundColor:'#65a30d'
+},
+{
+label:'Loss',
+data:[
+data.reduce((a,b)=>a+b.loss,0)
+],
+backgroundColor:'#ef4444'
+}
+]
+}
+});
 fyFilter.addEventListener('change', filterData);
 categoryFilter.addEventListener('change', filterData);
 monthFilter.addEventListener('change', filterData);
