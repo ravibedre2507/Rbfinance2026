@@ -69,7 +69,7 @@ const headers=rows[6];
 const dataRows=rows.slice(7).filter(row=>row.some(cell=>cell.trim()!==''));
 const resultColumnIndex=12;
 const pnlColumnIndex=13;
-const dateColumnIndex=0;
+const dateColumnIndex=1;
 let totalTrades=0,totalPnL=0,totalWins=0,totalLosses=0;
 let cumulativePnL=[];
 let runningPnL=0;
@@ -84,13 +84,17 @@ const pnlCell=row[pnlColumnIndex]||'0';
 const pnlValue=parseFloat(pnlCell.toString().replace(/,/g,''))||0;
 runningPnL+=pnlValue;
 cumulativePnL.push(runningPnL);
-const rawDate=row[dateColumnIndex] || `Trade ${rowIndex+1}`;
-const tradeDate=new Date(rawDate);
-let formattedLabel;
-if(!isNaN(tradeDate)){
-formattedLabel=tradeDate.toLocaleDateString('en-IN',{month:'short',year:'numeric'});
+const rawDate=(row[dateColumnIndex]||'').trim();
+let formattedLabel='';
+if(rawDate.includes('/')){
+const parts=rawDate.split('/');
+if(parts.length===3){
+formattedLabel=`${parts[1]}/${parts[2]}`;
 }else{
 formattedLabel=rawDate;
+}
+}else{
+formattedLabel=rawDate || `Trade ${rowIndex+1}`;
 }
 labels.push(formattedLabel);
 const resultCell=(row[resultColumnIndex]||'').toString().toLowerCase().trim();
