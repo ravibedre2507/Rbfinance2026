@@ -281,329 +281,105 @@ grid-template-columns:1fr;
 
 <script>
 
-/* MONTH CHART */
+<script>
 
-new Chart(document.getElementById('monthChart'),{
+const rawData = [
+{month:'April', fy:'2025-26', category:'SWING', profit:15549, loss:2049, wins:44, losses:28},
+{month:'May', fy:'2025-26', category:'SWING', profit:1753, loss:441, wins:11, losses:3},
+{month:'June', fy:'2025-26', category:'IPO', profit:16480, loss:1657, wins:44, losses:17},
+{month:'July', fy:'2025-26', category:'INTRADAY', profit:16680, loss:724, wins:27, losses:7},
+{month:'August', fy:'2025-26', category:'SWING', profit:27343, loss:3244, wins:34, losses:24},
+{month:'September', fy:'2025-26', category:'IPO', profit:30719, loss:8835, wins:44, losses:25},
+{month:'October', fy:'2025-26', category:'INTRADAY', profit:18257, loss:4797, wins:37, losses:36},
+{month:'November', fy:'2025-26', category:'SWING', profit:18415, loss:2911, wins:40, losses:31},
+{month:'December', fy:'2025-26', category:'DIVIDEND', profit:16541, loss:2270, wins:18, losses:21}
+];
 
+const fyFilter = document.getElementById('fyFilter');
+const categoryFilter = document.getElementById('categoryFilter');
+const monthFilter = document.getElementById('monthFilter');
+
+const monthChartCanvas = document.getElementById('monthChart');
+
+let monthChart;
+
+function filterData(){
+
+let filtered = rawData.filter(item => {
+
+return (
+(fyFilter.value === 'All' || fyFilter.value === 'All F.Y.' || item.fy === fyFilter.value) &&
+(categoryFilter.value === 'All' || categoryFilter.value === 'All Categories' || item.category === categoryFilter.value) &&
+(monthFilter.value === 'All' || monthFilter.value === 'All Months' || item.month === monthFilter.value)
+
+);
+
+});
+
+updateDashboard(filtered);
+
+}
+
+function updateDashboard(data){
+
+const labels = data.map(d => d.month);
+
+const profits = data.map(d => d.profit);
+
+const losses = data.map(d => d.loss);
+
+if(monthChart){
+monthChart.destroy();
+}
+
+monthChart = new Chart(monthChartCanvas,{
 type:'bar',
-
 data:{
-labels:[
-'April',
-'May',
-'June',
-'July',
-'August',
-'September',
-'October',
-'November',
-'December',
-'January',
-'February',
-'March'
-],
-
+labels:labels,
 datasets:[
-
 {
 label:'Profit',
-data:[
-15549,
-1753,
-16480,
-16680,
-27343,
-30719,
-18257,
-18415,
-16541,
-5887,
-6981,
-6211
-],
+data:profits,
 backgroundColor:'#65a30d'
 },
-
 {
 label:'Loss',
-data:[
-2049,
-441,
-1657,
-724,
-3244,
-8835,
-4797,
-2911,
-2270,
-4719,
-5071,
-2021
-],
+data:losses,
 backgroundColor:'#ef4444'
 }
-
 ]
 },
-
 options:{
 responsive:true,
 plugins:{
 legend:{
-labels:{
-color:'white'
-}
+labels:{color:'white'}
 }
 },
 scales:{
 x:{
-ticks:{
-color:'white'
-}
+ticks:{color:'white'}
 },
 y:{
-ticks:{
-color:'white'
+ticks:{color:'white'}
 }
 }
 }
-}
-
 });
 
+const totalProfit = data.reduce((a,b)=>a+b.profit,0);
+const totalLoss = data.reduce((a,b)=>a+b.loss,0);
 
+document.querySelectorAll('.card p')[0].innerText = totalProfit;
+document.querySelectorAll('.card p')[1].innerText = totalLoss;
 
-
-/* CATEGORY CHART */
-
-new Chart(document.getElementById('categoryChart'),{
-
-type:'bar',
-
-data:{
-labels:[
-'SWING',
-'IPO',
-'INTRADAY',
-'DIVIDEND'
-],
-
-datasets:[
-
-{
-label:'Profit',
-data:[
-47891,
-109608,
-22507,
-6945
-],
-backgroundColor:'#65a30d'
-},
-
-{
-label:'Loss',
-data:[
-19233,
-0,
-20386,
-0
-],
-backgroundColor:'#ef4444'
 }
 
-]
-},
+fyFilter.addEventListener('change', filterData);
+categoryFilter.addEventListener('change', filterData);
+monthFilter.addEventListener('change', filterData);
 
-options:{
-responsive:true,
-plugins:{
-legend:{
-labels:{
-color:'white'
-}
-}
-},
-scales:{
-x:{
-ticks:{
-color:'white'
-}
-},
-y:{
-ticks:{
-color:'white'
-}
-}
-}
-}
-
-});
-
-
-
-
-/* WIN LOSS CHART */
-
-new Chart(document.getElementById('winLossChart'),{
-
-type:'bar',
-
-data:{
-labels:[
-'April',
-'May',
-'June',
-'July',
-'August',
-'September',
-'October',
-'November',
-'December',
-'January',
-'February',
-'March'
-],
-
-datasets:[
-
-{
-label:'Wins',
-data:[
-44,
-11,
-44,
-27,
-34,
-44,
-37,
-40,
-18,
-32,
-45,
-27
-],
-backgroundColor:'#65a30d'
-},
-
-{
-label:'Losses',
-data:[
-28,
-3,
-17,
-7,
-24,
-25,
-36,
-31,
-21,
-32,
-36,
-19
-],
-backgroundColor:'#ef4444'
-}
-
-]
-},
-
-options:{
-responsive:true,
-plugins:{
-legend:{
-labels:{
-color:'white'
-}
-}
-},
-scales:{
-x:{
-ticks:{
-color:'white'
-}
-},
-y:{
-ticks:{
-color:'white'
-}
-}
-}
-}
-
-});
-
-
-
-
-/* FINANCIAL YEAR CHART */
-
-new Chart(document.getElementById('fyChart'),{
-
-type:'bar',
-
-data:{
-labels:[
-'2022-23',
-'2023-24',
-'2024-25',
-'2025-26',
-'2026-27'
-],
-
-datasets:[
-
-{
-label:'Profit',
-data:[
-18367,
-46013,
-65763,
-51185,
-5624
-],
-backgroundColor:'#65a30d'
-},
-
-{
-label:'Loss',
-data:[
-12034,
-12472,
-6434,
-7364,
-1315
-],
-backgroundColor:'#ef4444'
-}
-
-]
-},
-
-options:{
-responsive:true,
-plugins:{
-legend:{
-labels:{
-color:'white'
-}
-}
-},
-scales:{
-x:{
-ticks:{
-color:'white'
-}
-},
-y:{
-ticks:{
-color:'white'
-}
-}
-}
-}
-
-});
+filterData();
 
 </script>
 
