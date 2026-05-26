@@ -130,13 +130,13 @@ grid-template-columns:1fr;
 <div class="title">R B FINANCE TRADING DASHBOARD</div>
 <a href="index.html" class="back-btn">&larr; Back to Home</a>
 </div>
-<div id="status" class="status">Loading Google Sheet data...</div>
+<div id="status" class="status">Loading DB DATA sheet...</div>
 <div class="filters">
 <select id="fyFilter">
 <option value="All">All F.Y.</option>
 </select>
 <select id="categoryFilter">
-<option value="All">All Strategies</option>
+<option value="All">All Categories</option>
 </select>
 <select id="monthFilter">
 <option value="All">All Months</option>
@@ -164,8 +164,8 @@ grid-template-columns:1fr;
 <p id="netPL">0</p>
 </div>
 <div class="card">
-<h3>Top Strategy</h3>
-<p id="topStrategy">-</p>
+<h3>IPO Profit</h3>
+<p id="ipoProfit">0</p>
 </div>
 <div class="card">
 <h3>Total Wins</h3>
@@ -190,7 +190,7 @@ grid-template-columns:1fr;
 <canvas id="monthChart"></canvas>
 </div>
 <div class="chart-card">
-<h2>Profit &amp; Loss by Strategy</h2>
+<h2>Profit &amp; Loss by Trade Category</h2>
 <canvas id="categoryChart"></canvas>
 </div>
 </div>
@@ -205,15 +205,12 @@ grid-template-columns:1fr;
 </div>
 </div>
 <script>
-const sheetURL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRbSrzX6IexJncqPlRZcpI4FxuSgliicUnB5_-zz3SLRGcquh_xZYpmXammjO4VTkp72s8PY8Eu1yaZ/pub?gid=1077617715&single=true&output=csv';
+const sheetURL = 'https://docs.google.com/spreadsheets/d/1tBPAQjgjEWcTTL-pGu0Dfo9dnkLiyvYHCdzL79eJRJw/gviz/tq?tqx=out:csv&sheet=DB%20DATA';
 const fyFilter = document.getElementById('fyFilter');
 const categoryFilter = document.getElementById('categoryFilter');
 const monthFilter = document.getElementById('monthFilter');
 const statusEl = document.getElementById('status');
-const monthOrder = ['April','May','June','July','August','September','October','November','December','January','February','March'];
 let rawData = [];
-let summaryCharges = 0;
-let summaryNetPL = null;
 let monthChart;
 let categoryChart;
 let winLossChart;
@@ -221,22 +218,6 @@ let fyChart;
 
 function parseNumber(value){
 return Number(String(value || '0').replace(/,/g,'').trim()) || 0;
-}
-
-function parseDate(value){
-const parts = String(value || '').trim().split('/');
-if(parts.length !== 3) return null;
-const day = Number(parts[0]);
-const month = Number(parts[1]) - 1;
-const year = Number(parts[2]);
-const date = new Date(year, month, day);
-return Number.isNaN(date.getTime()) ? null : date;
-}
-
-function getFinancialYear(date){
-const year = date.getFullYear();
-const startYear = date.getMonth() >= 3 ? year : year - 1;
-return `${startYear}-${String(startYear + 1).slice(-2)}`;
 }
 
 function formatNumber(value){
@@ -263,17 +244,17 @@ return groups;
 }
 
 function summarize(data){
-const totalProfit = data.reduce((sum,item) => sum + Math.max(item.pnl,0), 0);
-const totalLoss = data.reduce((sum,item) => sum + Math.abs(Math.min(item.pnl,0)), 0);
-const grossPL = data.reduce((sum,item) => sum + item.pnl, 0);
-const totalWins = data.filter(item => item.result === 'win').length;
-const totalLosses = data.filter(item => item.result === 'loss').length;
+const totalProfit = data.reduce((sum,item) => sum + item.profit, 0);
+const totalLoss = data.reduce((sum,item) => sum + item.loss, 0);
+const grossPL = totalProfit - totalLoss;
+const totalCharges = data.reduce((sum,item) => sum + item.charges, 0);
+const netPL = grossPL - totalCharges;
+const ipoProfit = data.filter(item => item.category === 'IPO').reduce((sum,item) => sum + item.profit - item.loss, 0);
+const totalWins = data.filter(item => item.isWin).length;
+const totalLosses = data.filter(item => item.isLoss).length;
 const totalTrades = data.length;
 const winRate = totalTrades > 0 ? (totalWins / totalTrades) * 100 : 0;
-const isUnfiltered = totalTrades === rawData.length && fyFilter.value === 'All' && categoryFilter.value === 'All' && monthFilter.value === 'All';
-const charges = isUnfiltered ? summaryCharges : 0;
-const netPL = isUnfiltered && summaryNetPL !== null ? summaryNetPL : grossPL - charges;
-return {totalProfit,totalLoss,grossPL,totalWins,totalLosses,totalTrades,winRate,charges,netPL};
+return {totalProfit,totalLoss,grossPL,totalCharges,netPL,ipoProfit,totalWins,totalLosses,totalTrades,winRate};
 }
 
 function summarizeSeries(data, labelKey){
@@ -282,18 +263,10 @@ return Object.keys(grouped).map(label => {
 const rows = grouped[label];
 return {
 label,
-profit: rows.reduce((sum,item) => sum + Math.max(item.pnl,0), 0),
-loss: rows.reduce((sum,item) => sum + Math.abs(Math.min(item.pnl,0)), 0),
-gross: rows.reduce((sum,item) => sum + item.pnl, 0)
+monthNo: rows[0].monthNo,
+profit: rows.reduce((sum,item) => sum + item.profit, 0),
+loss: rows.reduce((sum,item) => sum + item.loss, 0)
 };
-});
-}
-
-function sortMonths(series){
-return series.sort((a,b) => {
-const [aMonth, aYear] = a.label.split(' ');
-const [bMonth, bYear] = b.label.split(' ');
-return (Number(aYear) - Number(bYear)) || (monthOrder.indexOf(aMonth) - monthOrder.indexOf(bMonth));
 });
 }
 
@@ -325,19 +298,18 @@ const totals = summarize(data);
 document.getElementById('totalProfit').innerText = formatNumber(totals.totalProfit);
 document.getElementById('totalLoss').innerText = formatNumber(totals.totalLoss);
 document.getElementById('grossPL').innerText = formatNumber(totals.grossPL);
-document.getElementById('totalCharges').innerText = formatNumber(totals.charges);
+document.getElementById('totalCharges').innerText = formatNumber(totals.totalCharges);
 document.getElementById('netPL').innerText = formatNumber(totals.netPL);
+document.getElementById('ipoProfit').innerText = formatNumber(totals.ipoProfit);
 document.getElementById('totalWins').innerText = totals.totalWins.toLocaleString('en-IN');
 document.getElementById('totalLosses').innerText = totals.totalLosses.toLocaleString('en-IN');
 document.getElementById('totalTrades').innerText = totals.totalTrades.toLocaleString('en-IN');
 document.getElementById('winRate').innerText = `${totals.winRate.toFixed(1)}%`;
-const strategyTotals = summarizeSeries(data, 'category').sort((a,b) => b.gross - a.gross);
-document.getElementById('topStrategy').innerText = strategyTotals.length ? strategyTotals[0].label : '-';
 if(monthChart) monthChart.destroy();
 if(categoryChart) categoryChart.destroy();
 if(winLossChart) winLossChart.destroy();
 if(fyChart) fyChart.destroy();
-const monthSeries = sortMonths(summarizeSeries(data, 'month'));
+const monthSeries = summarizeSeries(data, 'month').sort((a,b) => a.monthNo - b.monthNo);
 monthChart = createBarChart('monthChart', monthSeries.map(item => item.label), [
  {label:'Profit',data:monthSeries.map(item => Math.round(item.profit)),backgroundColor:'#65a30d'},
  {label:'Loss',data:monthSeries.map(item => Math.round(item.loss)),backgroundColor:'#ef4444'}
@@ -358,44 +330,37 @@ fyChart = createBarChart('fyChart', fySeries.map(item => item.label), [
 }
 
 function initializeFilters(){
-const fys = [...new Set(rawData.map(item => item.fy))].sort();
-const categories = [...new Set(rawData.map(item => item.category))].sort((a,b) => a.localeCompare(b));
-const months = [...new Set(rawData.map(item => item.month))].sort((a,b) => {
-const [aMonth, aYear] = a.split(' ');
-const [bMonth, bYear] = b.split(' ');
-return (Number(aYear) - Number(bYear)) || (monthOrder.indexOf(aMonth) - monthOrder.indexOf(bMonth));
-});
+const fys = [...new Set(rawData.map(item => item.fy))].filter(Boolean).sort();
+const categories = [...new Set(rawData.map(item => item.category))].filter(Boolean).sort((a,b) => a.localeCompare(b));
+const months = [...new Map(rawData.map(item => [item.month, item.monthNo])).entries()].sort((a,b) => a[1] - b[1]).map(item => item[0]);
 addOptions(fyFilter, fys, 'All F.Y.');
-addOptions(categoryFilter, categories, 'All Strategies');
+addOptions(categoryFilter, categories, 'All Categories');
 addOptions(monthFilter, months, 'All Months');
 }
 
 Papa.parse(sheetURL,{
  download:true,
+ header:true,
+ skipEmptyLines:true,
  complete:function(results){
-  const rows = results.data || [];
-  summaryCharges = parseNumber(rows[4] && rows[4][7]);
-  summaryNetPL = rows[4] && rows[4][8] !== undefined ? parseNumber(rows[4][8]) : null;
-  rawData = rows.slice(7).filter(row => row.some(cell => String(cell || '').trim() !== '')).map(row => {
-   const date = parseDate(row[1]);
-   const pnl = parseNumber(row[13]);
-   const result = String(row[12] || '').trim().toLowerCase();
-   return {
-    date,
-    month: date ? `${date.toLocaleString('en-US',{month:'long'})} ${date.getFullYear()}` : 'No Date',
-    fy: date ? getFinancialYear(date) : 'No F.Y.',
-    category: String(row[4] || 'Uncategorised').trim() || 'Uncategorised',
-    pnl,
-    result
-   };
-  });
+  rawData = (results.data || []).filter(row => row['Trade Category']).map(row => ({
+   category: String(row['Trade Category'] || '').trim(),
+   fy: String(row['F.Y.'] || '').trim(),
+   month: String(row['Trade Month'] || '').trim(),
+   monthNo: parseNumber(row['Month no']),
+   charges: parseNumber(row['Charges']),
+   profit: parseNumber(row['Profit']),
+   loss: parseNumber(row['Loss']),
+   isWin: String(row['Wins'] || '').trim().toLowerCase() === 'win',
+   isLoss: String(row['Losses'] || '').trim().toLowerCase() === 'loss'
+  }));
   initializeFilters();
-  statusEl.innerText = `Loaded ${rawData.length.toLocaleString('en-IN')} trades from Google Sheet`;
+  statusEl.innerText = `Loaded ${rawData.length.toLocaleString('en-IN')} trades from DB DATA sheet`;
   filterData();
  },
  error:function(error){
   statusEl.classList.add('error');
-  statusEl.innerText = `Unable to load Google Sheet data: ${error.message || 'unknown error'}`;
+  statusEl.innerText = `Unable to load DB DATA sheet: ${error.message || 'unknown error'}`;
  }
 });
 fyFilter.addEventListener('change', filterData);
