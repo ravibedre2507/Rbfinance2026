@@ -4,40 +4,238 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Income Tax Learning Hub</title>
+
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
 <style>
-body{font-family:'Inter',sans-serif;background:#050816;color:#fff;margin:0}a{text-decoration:none;color:inherit}.header{padding:2rem 5%;background:#10172a;border-bottom:1px solid rgba(255,255,255,.08)}h1{font-size:3rem;margin:0 0 1rem}p{font-size:1.1rem;color:#d1d5db}.container{padding:4rem 5%}.study-box{background:#151b2f;border-radius:24px;overflow:hidden;border:1px solid rgba(255,255,255,.08)}.study-header{background:#1e293b;padding:2rem;font-size:2rem;font-weight:800;color:#f5a623;display:flex;justify-content:space-between;align-items:center}.chapter-list{padding:2rem}.chapter-item{background:#1e293b;padding:1.2rem 1.5rem;border-radius:16px;margin-bottom:1rem;display:flex;justify-content:space-between;align-items:center;gap:1rem}.chapter-title{font-size:1.05rem;font-weight:600}.open-btn{background:#2563eb;color:#fff;padding:12px 22px;border-radius:12px;font-weight:700}.back-btn{position:absolute;top:40px;right:40px;background:#f5a623;color:#050816;padding:12px 22px;border-radius:14px;font-weight:700}.footer{text-align:center;padding:2rem;color:#94a3b8}@media(max-width:768px){h1{font-size:2.2rem}.chapter-item{flex-direction:column;align-items:flex-start}.open-btn{width:100%;text-align:center}.back-btn{top:20px;right:20px}}
+
+body{
+    font-family:'Inter',sans-serif;
+    background:#050816;
+    color:#fff;
+    margin:0;
+    padding:0;
+}
+
+a{
+    text-decoration:none;
+    color:inherit;
+}
+
+.header{
+    padding:2rem 5%;
+    background:#10172a;
+    border-bottom:1px solid rgba(255,255,255,.08);
+}
+
+.header h1{
+    margin:0;
+    font-size:3rem;
+    font-weight:800;
+}
+
+.header p{
+    color:#cbd5e1;
+    font-size:1.1rem;
+    margin-top:12px;
+}
+
+.back-btn{
+    position:absolute;
+    top:30px;
+    right:40px;
+    background:#f5a623;
+    color:#050816;
+    padding:12px 22px;
+    border-radius:14px;
+    font-weight:700;
+}
+
+.container{
+    padding:4rem 5%;
+}
+
+.study-card{
+    background:#151b2f;
+    border-radius:24px;
+    border:1px solid rgba(255,255,255,.08);
+    overflow:hidden;
+    box-shadow:0 10px 30px rgba(0,0,0,.25);
+}
+
+.study-header{
+    background:#1e293b;
+    padding:2rem;
+    font-size:2rem;
+    font-weight:800;
+    color:#f5a623;
+}
+
+.chapter-list{
+    padding:2rem;
+}
+
+.chapter-item{
+    background:#1e293b;
+    padding:1.2rem 1.5rem;
+    border-radius:16px;
+    margin-bottom:1rem;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:1rem;
+}
+
+.chapter-title{
+    font-size:1.05rem;
+    font-weight:600;
+}
+
+.open-btn{
+    background:#2563eb;
+    color:#fff;
+    padding:10px 20px;
+    border-radius:10px;
+    font-weight:700;
+    white-space:nowrap;
+}
+
+.open-btn:hover{
+    opacity:.9;
+}
+
+.footer{
+    text-align:center;
+    padding:2rem;
+    color:#94a3b8;
+    border-top:1px solid rgba(255,255,255,.06);
+    margin-top:3rem;
+}
+
+@media(max-width:768px){
+
+    .header h1{
+        font-size:2.2rem;
+    }
+
+    .chapter-item{
+        flex-direction:column;
+        align-items:flex-start;
+    }
+
+    .open-btn{
+        width:100%;
+        text-align:center;
+    }
+
+    .back-btn{
+        top:20px;
+        right:20px;
+        padding:10px 16px;
+        font-size:.9rem;
+    }
+
+}
+
 </style>
 </head>
+
 <body>
+
 <a href="index.html" class="back-btn">← Back to Home</a>
+
 <div class="header">
-<h1>Income Tax Learning Hub</h1>
-<p>Income Tax concepts, practical learning, chapter-wise study materials and compliance topics.</p>
+    <h1>Income Tax Learning Hub</h1>
+    <p>
+        Income Tax concepts, chapter-wise practical learning materials 
+        and taxation study resources.
+    </p>
 </div>
+
 <div class="container">
-<div class="study-box">
-<div class="study-header">
-<span>Income Tax Study Material</span>
-<span>▲</span>
+
+    <div class="study-card">
+
+        <div class="study-header">
+            Income Tax Study Material
+        </div>
+
+        <div class="chapter-list">
+
+            <div class="chapter-item">
+                <span class="chapter-title">Chapter - 1 - Basic Concepts</span>
+                <a href="#" class="open-btn">Open</a>
+            </div>
+
+            <div class="chapter-item">
+                <span class="chapter-title">Chapter - 2 - Residence & Scope of Total Income</span>
+                <a href="#" class="open-btn">Open</a>
+            </div>
+
+            <div class="chapter-item">
+                <span class="chapter-title">Chapter - 3.1 - HOC - Salaries</span>
+                <a href="#" class="open-btn">Open</a>
+            </div>
+
+            <div class="chapter-item">
+                <span class="chapter-title">Chapter - 3.2 - HOC - House Property</span>
+                <a href="#" class="open-btn">Open</a>
+            </div>
+
+            <div class="chapter-item">
+                <span class="chapter-title">Chapter - 3.3 - HOC - PGBP</span>
+                <a href="#" class="open-btn">Open</a>
+            </div>
+
+            <div class="chapter-item">
+                <span class="chapter-title">Chapter - 3.4 - HOC - Capital Gains</span>
+                <a href="#" class="open-btn">Open</a>
+            </div>
+
+            <div class="chapter-item">
+                <span class="chapter-title">Chapter - 3.5 - HOC - Other Sources</span>
+                <a href="#" class="open-btn">Open</a>
+            </div>
+
+            <div class="chapter-item">
+                <span class="chapter-title">Chapter - 4 - Income of other person included in Total Income</span>
+                <a href="#" class="open-btn">Open</a>
+            </div>
+
+            <div class="chapter-item">
+                <span class="chapter-title">Chapter - 5 - Aggregation Carry forward & Setoff</span>
+                <a href="#" class="open-btn">Open</a>
+            </div>
+
+            <div class="chapter-item">
+                <span class="chapter-title">Chapter - 6 - Deductions from GTI</span>
+                <a href="#" class="open-btn">Open</a>
+            </div>
+
+            <div class="chapter-item">
+                <span class="chapter-title">Chapter - 7 - Advance Tax TDS & TCS</span>
+                <a href="#" class="open-btn">Open</a>
+            </div>
+
+            <div class="chapter-item">
+                <span class="chapter-title">Chapter - 8 - Provisions for filing ROI</span>
+                <a href="#" class="open-btn">Open</a>
+            </div>
+
+            <div class="chapter-item">
+                <span class="chapter-title">Chapter - 9 - Income Tax Liability</span>
+                <a href="#" class="open-btn">Open</a>
+            </div>
+
+        </div>
+
+    </div>
+
 </div>
-<div class="chapter-list">
-<div class="chapter-item"><span class="chapter-title">Chapter - 1 - Basic Concepts</span><a href="#" class="open-btn">Open</a></div>
-<div class="chapter-item"><span class="chapter-title">Chapter - 2 - Residence & Scope of Total Income</span><a href="#" class="open-btn">Open</a></div>
-<div class="chapter-item"><span class="chapter-title">Chapter - 3.1 - HOC - Salaries</span><a href="#" class="open-btn">Open</a></div>
-<div class="chapter-item"><span class="chapter-title">Chapter - 3.2 - HOC - House Property</span><a href="#" class="open-btn">Open</a></div>
-<div class="chapter-item"><span class="chapter-title">Chapter - 3.3 - HOC - PGBP</span><a href="#" class="open-btn">Open</a></div>
-<div class="chapter-item"><span class="chapter-title">Chapter - 3.4 - HOC - Capital Gains</span><a href="#" class="open-btn">Open</a></div>
-<div class="chapter-item"><span class="chapter-title">Chapter - 3.5 - HOC - Other Sources</span><a href="#" class="open-btn">Open</a></div>
-<div class="chapter-item"><span class="chapter-title">Chapter - 4 - Income of other person included in Total Income</span><a href="#" class="open-btn">Open</a></div>
-<div class="chapter-item"><span class="chapter-title">Chapter - 5 - Aggregation Carry forward & Setoff</span><a href="#" class="open-btn">Open</a></div>
-<div class="chapter-item"><span class="chapter-title">Chapter - 6 - Deductions from GTI</span><a href="#" class="open-btn">Open</a></div>
-<div class="chapter-item"><span class="chapter-title">Chapter - 7 - Advance Tax TDS & TCS</span><a href="#" class="open-btn">Open</a></div>
-<div class="chapter-item"><span class="chapter-title">Chapter - 8 - Provisions for filing ROI</span><a href="#" class="open-btn">Open</a></div>
-<div class="chapter-item"><span class="chapter-title">Chapter - 9 - Income Tax Liablity</span><a href="#" class="open-btn">Open</a></div>
+
+<div class="footer">
+    © 2026 R B Finance
 </div>
-</div>
-</div>
-<div class="footer">© 2026 R B Finance</div>
+
 </body>
 </html>
