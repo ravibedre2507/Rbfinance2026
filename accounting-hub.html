@@ -6,43 +6,43 @@
 <title>Accounting Learning Hub</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-body{font-family:'Inter',sans-serif;background:#050816;color:#fff;margin:0;line-height:1.7}
-nav{padding:1rem 5%;display:flex;justify-content:space-between;align-items:center;background:#0f172a;border-bottom:1px solid rgba(255,255,255,.08)}
-.logo{font-size:1.8rem;font-weight:800}.back{color:#60a5fa;text-decoration:none}
-.container{padding:50px 5%}.hero{text-align:center;margin-bottom:50px}.hero h1{font-size:3rem;margin-bottom:10px}.hero p{color:#cbd5e1}
-.section-title{font-size:2rem;color:#f5a623;margin:40px 0 25px}
-.dropdown-header{width:100%;background:#151b2f;border:1px solid rgba(255,255,255,.08);border-radius:22px;padding:22px 28px;display:flex;justify-content:space-between;align-items:center;box-sizing:border-box;font-size:1.1rem;font-weight:600;margin-top:10px}
-.dropdown-header:hover{border-color:#f5a623}
-.dropdown-content{width:100%;background:#0f172a;border-radius:0 0 18px 18px;padding:20px 28px;box-sizing:border-box}
-.dropdown-content ul{margin:0;padding-left:20px;color:#cbd5e1}
-.dropdown-content li{margin-bottom:12px}
-@media(max-width:768px){.hero h1{font-size:2.2rem}}
+body{font-family:'Inter',sans-serif;background:#050816;color:#fff;margin:0;padding:0;position:relative}a{text-decoration:none;color:inherit}.header{padding:2rem 5%;background:#10172a;border-bottom:1px solid rgba(255,255,255,.08)}.header h1{margin:0;font-size:3rem;font-weight:800}.header p{color:#cbd5e1;font-size:1.1rem;margin-top:12px}.back-btn{position:absolute;top:30px;right:40px;background:#f5a623;color:#050816;padding:12px 22px;border-radius:14px;font-weight:700}.container{padding:4rem 5%}.study-card{background:#151b2f;border-radius:24px;border:1px solid rgba(255,255,255,.08);overflow:hidden;box-shadow:0 10px 30px rgba(0,0,0,.25)}.study-header{background:#1e293b;padding:2rem;font-size:2rem;font-weight:800;color:#f5a623;display:flex;justify-content:space-between;align-items:center;cursor:pointer}.study-header:hover{background:#263449}.arrow{font-size:1.5rem;transition:.3s}.chapter-list{display:none;padding:2rem}.chapter-item{background:#1e293b;padding:1.2rem 1.5rem;border-radius:16px;margin-bottom:1rem;display:flex;justify-content:space-between;align-items:center;gap:1rem;transition:.3s;border:1px solid rgba(255,255,255,.05)}.chapter-item:hover{background:#263449;transform:translateY(-3px);border-color:#f5a623}.chapter-title{font-size:1.05rem;font-weight:600}.open-btn{background:#2563eb;color:#fff;padding:10px 20px;border-radius:10px;font-weight:700;white-space:nowrap}.footer{text-align:center;padding:2rem;color:#94a3b8;border-top:1px solid rgba(255,255,255,.06);margin-top:3rem}@media(max-width:768px){.header h1{font-size:2.2rem}.chapter-item{flex-direction:column;align-items:flex-start}.open-btn{width:100%;text-align:center}.back-btn{top:20px;right:20px;padding:10px 16px;font-size:.9rem}.study-header{font-size:1.4rem}}
 </style>
 </head>
 <body>
-<nav>
-<div class="logo">R B Finance</div>
-<a href="index.html" class="back">← Back to Home</a>
-</nav>
-<div class="container">
-<div class="hero">
+<a href="index.html" class="back-btn">← Back to Home</a>
+<div class="header">
 <h1>Accounting Learning Hub</h1>
-<p>Master accounting concepts and access practical study resources.</p>
+<p>Accounting concepts, journal entries and chapter-wise practical study materials.</p>
 </div>
-<h2 class="section-title">Study Material</h2>
-<div class="dropdown-header">
-<span>Accounting Chapters & Study Material</span>
-<span>▼</span>
+<div class="container">
+<div class="study-card">
+<div class="study-header" onclick="toggleChapters()">
+<span>Accounting Study Material</span>
+<span class="arrow" id="arrow">▼</span>
 </div>
-<div class="dropdown-content">
-<ul>
-<li>Introduction to Accounting</li>
-<li>Journal Entries</li>
-<li>Ledger Posting</li>
-<li>Trial Balance</li>
-<li>Final Accounts</li>
-</ul>
+<div class="chapter-list" id="chapterList">
+<div class="chapter-item"><span class="chapter-title">Accounting Fundamentals</span><a href="accounting_complete_guide.html" class="open-btn">Open</a></div>
+<div class="chapter-item"><span class="chapter-title">Journal Entries</span><a href="#" class="open-btn">Open</a></div>
+<div class="chapter-item"><span class="chapter-title">Ledger Posting</span><a href="#" class="open-btn">Open</a></div>
+<div class="chapter-item"><span class="chapter-title">Trial Balance</span><a href="#" class="open-btn">Open</a></div>
+<div class="chapter-item"><span class="chapter-title">Final Accounts</span><a href="#" class="open-btn">Open</a></div>
 </div>
 </div>
+</div>
+<div class="footer">© 2026 R B Finance</div>
+<script>
+function toggleChapters(){
+const container=document.getElementById('chapterList');
+const arrow=document.getElementById('arrow');
+if(container.style.display==='block'){
+container.style.display='none';
+arrow.innerHTML='▼';
+}else{
+container.style.display='block';
+arrow.innerHTML='▲';
+}
+}
+</script>
 </body>
 </html>
