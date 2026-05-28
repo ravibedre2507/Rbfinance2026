@@ -11,11 +11,12 @@ nav{padding:1rem 5%;display:flex;justify-content:space-between;align-items:cente
 .logo{font-size:1.8rem;font-weight:800}.back{color:#60a5fa;text-decoration:none}
 .container{padding:50px 5%}.hero{text-align:center;margin-bottom:50px}.hero h1{font-size:3rem;margin-bottom:10px}.hero p{color:#cbd5e1}
 .section-title{font-size:2rem;color:#60a5fa;margin:40px 0 25px}.gold{color:#f5a623}
-.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1.5rem}
+.grid{display:grid;grid-template-columns:1fr;gap:1.5rem;max-width:420px}
 .card{background:#151b2f;padding:1.8rem;border-radius:22px;border:1px solid rgba(255,255,255,.08);transition:.3s;text-decoration:none;color:#fff;display:block}
 .card:hover{transform:translateY(-6px);border-color:#f5a623}.icon{font-size:2.5rem;margin-bottom:1rem}.card p{color:#cbd5e1}
-@media(max-width:1000px){.grid{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:768px){.grid{grid-template-columns:1fr}.hero h1{font-size:2.2rem}}
+.study-box{background:#151b2f;padding:1.8rem;border-radius:22px;border:1px solid rgba(255,255,255,.08);max-width:700px}
+.study-box select{width:100%;padding:14px;border-radius:12px;background:#0f172a;color:#fff;border:none;margin-top:15px}
+@media(max-width:768px){.hero h1{font-size:2.2rem}}
 </style>
 </head>
 <body>
@@ -35,44 +36,19 @@ nav{padding:1rem 5%;display:flex;justify-content:space-between;align-items:cente
 <h3>Accounting Fundamentals</h3>
 <p>Journal entries, ledger, trial balance and golden rules.</p>
 </a>
-<a href="income-tax.html" class="card">
-<div class="icon">🧾</div>
-<h3>Income Tax</h3>
-<p>Direct tax concepts, TDS and filing procedures.</p>
-</a>
-<a href="gst.html" class="card">
-<div class="icon">🏛️</div>
-<h3>GST Concepts</h3>
-<p>GST workflows, ITC concepts and returns.</p>
-</a>
-<div class="card">
-<div class="icon">💹</div>
-<h3>Finance Basics</h3>
-<p>Financial statements and analysis concepts.</p>
-</div>
 </div>
 <h2 class="section-title gold">Study Material</h2>
-<div class="grid">
-<div class="card">
-<div class="icon">📚</div>
-<h3>Journal Entry Notes</h3>
-<p>Practical accounting entries with examples.</p>
-</div>
-<div class="card">
-<div class="icon">📄</div>
-<h3>PDF Study Material</h3>
-<p>Downloadable accounting notes and concepts.</p>
-</div>
-<div class="card">
-<div class="icon">📊</div>
-<h3>Excel Practice Files</h3>
-<p>Practice MIS and accounting reports.</p>
-</div>
-<div class="card">
-<div class="icon">🎥</div>
-<h3>Video Tutorials</h3>
-<p>Learn accounting through practical videos.</p>
-</div>
+<div class="study-box">
+<h3>Accounting Study Material</h3>
+<p>Select chapter-wise accounting material from dropdown.</p>
+<select>
+<option selected disabled>Select Accounting Chapter</option>
+<option>Introduction to Accounting</option>
+<option>Journal Entries</option>
+<option>Ledger Posting</option>
+<option>Trial Balance</option>
+<option>Final Accounts</option>
+</select>
 </div>
 </div>
 </body>
