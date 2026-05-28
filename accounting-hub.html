@@ -14,8 +14,11 @@ nav{padding:1rem 5%;display:flex;justify-content:space-between;align-items:cente
 .grid{display:grid;grid-template-columns:1fr;gap:1.5rem;max-width:420px}
 .card{background:#151b2f;padding:1.8rem;border-radius:22px;border:1px solid rgba(255,255,255,.08);transition:.3s;text-decoration:none;color:#fff;display:block}
 .card:hover{transform:translateY(-6px);border-color:#f5a623}.icon{font-size:2.5rem;margin-bottom:1rem}.card p{color:#cbd5e1}
-.study-box{background:#151b2f;padding:1.8rem;border-radius:22px;border:1px solid rgba(255,255,255,.08);max-width:700px}
-.study-box select{width:100%;padding:14px;border-radius:12px;background:#0f172a;color:#fff;border:none;margin-top:15px}
+.dropdown-header{width:100%;background:#151b2f;border:1px solid rgba(255,255,255,.08);border-radius:22px;padding:22px 28px;display:flex;justify-content:space-between;align-items:center;box-sizing:border-box;font-size:1.1rem;font-weight:600;margin-top:10px}
+.dropdown-header:hover{border-color:#f5a623}
+.dropdown-content{width:100%;background:#0f172a;border-radius:0 0 18px 18px;padding:20px 28px;box-sizing:border-box}
+.dropdown-content ul{margin:0;padding-left:20px;color:#cbd5e1}
+.dropdown-content li{margin-bottom:12px}
 @media(max-width:768px){.hero h1{font-size:2.2rem}}
 </style>
 </head>
@@ -38,17 +41,18 @@ nav{padding:1rem 5%;display:flex;justify-content:space-between;align-items:cente
 </a>
 </div>
 <h2 class="section-title gold">Study Material</h2>
-<div class="study-box">
-<h3>Accounting Study Material</h3>
-<p>Select chapter-wise accounting material from dropdown.</p>
-<select>
-<option selected disabled>Select Accounting Chapter</option>
-<option>Introduction to Accounting</option>
-<option>Journal Entries</option>
-<option>Ledger Posting</option>
-<option>Trial Balance</option>
-<option>Final Accounts</option>
-</select>
+<div class="dropdown-header">
+<span>Accounting Chapters & Study Material</span>
+<span>▼</span>
+</div>
+<div class="dropdown-content">
+<ul>
+<li>Introduction to Accounting</li>
+<li>Journal Entries</li>
+<li>Ledger Posting</li>
+<li>Trial Balance</li>
+<li>Final Accounts</li>
+</ul>
 </div>
 </div>
 </body>
