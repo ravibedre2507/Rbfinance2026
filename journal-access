@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Protected Access</title>
+
+<style>
+body{
+  margin:0;
+  font-family:Arial,sans-serif;
+  background:#0B0E1A;
+  color:#fff;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  height:100vh;
+}
+
+.box{
+  background:#151A2C;
+  padding:40px;
+  border-radius:18px;
+  text-align:center;
+  width:350px;
+}
+
+h1{
+  color:#F5A623;
+}
+
+input{
+  width:100%;
+  padding:12px;
+  border:none;
+  border-radius:10px;
+  margin:20px 0;
+}
+
+button{
+  padding:12px 24px;
+  background:#F5A623;
+  color:#000;
+  border:none;
+  border-radius:10px;
+  font-weight:bold;
+  cursor:pointer;
+}
+</style>
+</head>
+
+<body>
+
+<div class="box">
+  <h1>Trading Dashboard Access</h1>
+
+  <input type="password" id="pass" placeholder="Enter Password">
+
+  <button onclick="checkPass()">Access</button>
+</div>
+
+<script>
+function checkPass(){
+
+  if(document.getElementById("pass").value === "Magic@@1234"){
+      window.location.href="journal.html";
+  }
+  else{
+      alert("Wrong Password");
+      window.location.href="index.html";
+  }
+
+}
+</script>
+
+</body>
+</html>
