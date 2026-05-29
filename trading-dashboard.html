@@ -128,10 +128,8 @@ grid-template-columns:1fr;
 <body>
 <div class="header">
 <div class="title">R B FINANCE TRADING DASHBOARD</div>
-<a href="index.html" class="back-btn">&larr; Back to Home</a>
-</div>
-<div id="status" class="status">Loading DB DATA sheet...</div>
-<div class="filters">
+<div style="display:flex;align-items:center;gap:15px;flex-wrap:wrap;">
+<div class="filters" style="margin-bottom:0;">
 <select id="fyFilter">
 <option value="All">All F.Y.</option>
 </select>
@@ -141,6 +139,9 @@ grid-template-columns:1fr;
 <select id="monthFilter">
 <option value="All">All Months</option>
 </select>
+</div>
+<a href="index.html" class="back-btn">&larr; Back to Home</a>
+</div>
 </div>
 <div class="kpi-grid">
 <div class="card">
