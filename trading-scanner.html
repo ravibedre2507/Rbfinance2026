@@ -76,14 +76,7 @@ body{
     font-weight:bold;
 }
 
-.scanner-btn:hover{
-    opacity:0.9;
-}
-
 .back-btn{
-    display:inline-block;
-    margin-top:30px;
-    margin-left:auto;
     background:#facc15;
     color:#000;
     text-decoration:none;
@@ -91,6 +84,7 @@ body{
     border-radius:8px;
     font-weight:bold;
 }
+
 .top-right-btn{
     position:fixed;
     top:20px;
@@ -99,11 +93,11 @@ body{
 }
 </style>
 </head>
-
 <body>
 
-<div class="container">
+<a href="index.html" class="back-btn top-right-btn">⬅ Back to Home</a>
 
+<div class="container">
     <div class="header">
         <h1>🔍 Trading Scanner</h1>
         <p>Identify potential breakout opportunities in the stock market.</p>
@@ -111,27 +105,19 @@ body{
 
     <div class="card">
         <div class="card-icon">📈</div>
-
         <h2>Breakout Scanner</h2>
-
         <p>
             Scan stocks that are breaking important resistance & support levels with
             strong price action and volume confirmation.
         </p>
 
-         <a href="https://www.nseindia.com/market-data/live-market-indices/heatmap"
-       target="_blank"
-       class="scanner-btn">
+        <a href="https://www.nseindia.com/market-data/live-market-indices/heatmap"
+        target="_blank"
+        class="scanner-btn">
         Open NSE Heatmap
-    </a>
+        </a>
     </div>
 </div>
 
 </body>
- <div style="display:flex; justify-content:flex-end;">
-    <a href="index.html" class="back-btn">
-        ⬅ Back to Home
-    </a>
-</div>
-<div class="container">
 </html>
