@@ -100,6 +100,21 @@ grid-template-columns:2fr 1fr;
 gap:20px;
 margin-bottom:20px;
 }
+.full-width-chart{
+    width:100%;
+    margin-bottom:20px;
+}
+.chart-grid-half{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:20px;
+    margin-bottom:20px;
+}
+@media(max-width:900px){
+    .chart-grid-half{
+        grid-template-columns:1fr;
+    }
+}
 .chart-card{
 background:#111827;
 padding:20px;
@@ -186,24 +201,29 @@ grid-template-columns:1fr;
 <p id="winRate">0%</p>
 </div>
 </div>
-<div class="chart-grid">
-<div class="chart-card" style="margin-bottom:20px;">
-<h2>Total Profit & Loss by Month</h2>
-<canvas id="monthChart"></canvas>
+<!-- Row 1 -->
+<div class="chart-card full-width-chart">
+    <h2>Total Profit & Loss by Month</h2>
+    <canvas id="monthChart"></canvas>
 </div>
-<div class="chart-card" style="margin-bottom:20px;">
-<h2>Total Trades Count by Win & Losses</h2>
-<canvas id="winLossChart"></canvas>
+
+<!-- Row 2 -->
+<div class="chart-card full-width-chart">
+    <h2>Total Trades Count by Win & Losses</h2>
+    <canvas id="winLossChart"></canvas>
 </div>
-<div class="chart-grid">
-<div class="chart-card">
-<h2>Profit & Loss by Trade Category</h2>
-<canvas id="categoryChart"></canvas>
-</div>
-<div class="chart-card">
-<h2>Profit & Loss by F.Y.</h2>
-<canvas id="fyChart"></canvas>
-</div>
+
+<!-- Row 3 -->
+<div class="chart-grid-half">
+    <div class="chart-card">
+        <h2>Profit & Loss by Trade Category</h2>
+        <canvas id="categoryChart"></canvas>
+    </div>
+
+    <div class="chart-card">
+        <h2>Profit & Loss by F.Y.</h2>
+        <canvas id="fyChart"></canvas>
+    </div>
 </div>
 <script>
 const sheetURL = 'https://docs.google.com/spreadsheets/d/1tBPAQjgjEWcTTL-pGu0Dfo9dnkLiyvYHCdzL79eJRJw/gviz/tq?tqx=out:csv&sheet=DB%20DATA';
