@@ -272,14 +272,38 @@ loss: rows.reduce((sum,item) => sum + item.loss, 0)
 });
 }
 
+
+const valueLabelPlugin = {
+ id:'valueLabelPlugin',
+ afterDatasetsDraw(chart){
+  const {ctx}=chart;
+  chart.data.datasets.forEach((dataset,i)=>{
+   const meta=chart.getDatasetMeta(i);
+   meta.data.forEach((bar,index)=>{
+    const value=dataset.data[index];
+    ctx.save();
+    ctx.fillStyle='#ffffff';
+    ctx.font='bold 12px Inter';
+    ctx.textAlign='center';
+    ctx.fillText(Number(value).toLocaleString('en-IN'),bar.x,bar.y-8);
+    ctx.restore();
+   });
+  });
+ }
+};
+
 function createBarChart(canvasId, labels, datasets){
 return new Chart(document.getElementById(canvasId),{
  type:'bar',
  data:{labels,datasets},
+ plugins:[valueLabelPlugin],
  options:{
   responsive:true,
   plugins:{legend:{labels:{color:'white'}}},
-  scales:{x:{ticks:{color:'white'}},y:{ticks:{color:'white'}}}
+  scales:{
+   x:{ticks:{color:'white'},grid:{display:false}},
+   y:{display:false,grid:{display:false},beginAtZero:true}
+  }
  }
 });
 }
@@ -321,9 +345,25 @@ categoryChart = createBarChart('categoryChart', categorySeries.map(item => item.
  {label:'Profit',data:categorySeries.map(item => Math.round(item.profit)),backgroundColor:'#65a30d'},
  {label:'Loss',data:categorySeries.map(item => Math.round(item.loss)),backgroundColor:'#ef4444'}
 ]);
-winLossChart = createBarChart('winLossChart', ['Wins','Losses'], [
- {label:'Trades',data:[totals.totalWins,totals.totalLosses],backgroundColor:['#65a30d','#ef4444']}
-]);
+const monthlyWinLoss = {};
+data.forEach(item=>{
+ if(!monthlyWinLoss[item.month]){
+  monthlyWinLoss[item.month]={monthNo:item.monthNo,wins:0,losses:0};
+ }
+ if(item.isWin) monthlyWinLoss[item.month].wins++;
+ if(item.isLoss) monthlyWinLoss[item.month].losses++;
+});
+
+const sortedMonths = Object.entries(monthlyWinLoss)
+.sort((a,b)=>a[1].monthNo-b[1].monthNo);
+
+winLossChart = createBarChart('winLossChart',
+ sortedMonths.map(x=>x[0]),
+ [
+  {label:'Wins',data:sortedMonths.map(x=>x[1].wins),backgroundColor:'#65a30d'},
+  {label:'Losses',data:sortedMonths.map(x=>x[1].losses),backgroundColor:'#ef4444'}
+ ]
+);
 const fySeries = summarizeSeries(data, 'fy').sort((a,b) => a.label.localeCompare(b.label));
 fyChart = createBarChart('fyChart', fySeries.map(item => item.label), [
  {label:'Profit',data:fySeries.map(item => Math.round(item.profit)),backgroundColor:'#65a30d'},
