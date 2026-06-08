@@ -226,6 +226,21 @@ grid-template-columns:1fr;
     </div>
 </div>
 <script>
+const AUTH_KEY = "rbfinance_dashboard_auth";
+const AUTH_DURATION = 24 * 60 * 60 * 1000;
+
+const authTime = localStorage.getItem(AUTH_KEY);
+
+if (!authTime) {
+    window.location.href = "trading-dashboard-access.html";
+}
+
+const elapsed = Date.now() - Number(authTime);
+
+if (elapsed > AUTH_DURATION) {
+    localStorage.removeItem(AUTH_KEY);
+    window.location.href = "trading-dashboard-access.html";
+}
 const sheetURL = 'https://docs.google.com/spreadsheets/d/1tBPAQjgjEWcTTL-pGu0Dfo9dnkLiyvYHCdzL79eJRJw/gviz/tq?tqx=out:csv&sheet=DB%20DATA';
 const fyFilter = document.getElementById('fyFilter');
 const categoryFilter = document.getElementById('categoryFilter');
