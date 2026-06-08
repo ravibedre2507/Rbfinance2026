@@ -60,16 +60,37 @@ button{
 </div>
 
 <script>
-function checkPass(){
+const PASSWORD = "Magic@@1234";
+const AUTH_KEY = "rbfinance_dashboard_auth";
+const AUTH_DURATION = 24 * 60 * 60 * 1000; // 24 hours
 
-  if(document.getElementById("pass").value === "Magic@@1234"){
-      window.location.href="trading-dashboard.html";
-  }
-  else{
-      alert("Wrong Password");
-      window.location.href="index.html";
-  }
+// If already authenticated within 24 hours
+const authTime = localStorage.getItem(AUTH_KEY);
 
+if (authTime) {
+    const elapsed = Date.now() - Number(authTime);
+
+    if (elapsed < AUTH_DURATION) {
+        window.location.href = "trading-dashboard.html";
+    }
+}
+
+function checkPass() {
+
+    const enteredPassword = document.getElementById("pass").value;
+
+    if (enteredPassword === PASSWORD) {
+
+        localStorage.setItem(AUTH_KEY, Date.now());
+
+        window.location.href = "trading-dashboard.html";
+
+    } else {
+
+        alert("Wrong Password");
+        window.location.href = "index.html";
+
+    }
 }
 </script>
 
