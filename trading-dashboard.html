@@ -63,7 +63,7 @@
     .kpi-card { background: linear-gradient(145deg, #111827, #1e293b); padding: 20px; border-radius: 20px; border: 1px solid rgba(255,255,255,.08); box-shadow: 0 10px 30px rgba(0,0,0,.35); min-width: 180px; transition: none; }
     .kpi-card:hover { background: linear-gradient(145deg, #111827, #1e293b); }
     .kpi-label { font-size: .95rem; color: #cbd5e1; text-transform: none; letter-spacing: normal; margin-bottom: 10px; white-space: nowrap; }
-    .kpi-value { font-size: 1.7rem; font-weight: 800; line-height: 1.2; color: var(--text); }
+    .kpi-value { font-size: 1.7rem; font-weight: 800; line-height: 1.2; color: #facc15; }
     .kpi-sub { font-size: 11px; color: var(--muted); margin-top: 3px; }
 
     /* ── Charts ── */
@@ -559,7 +559,7 @@ function barOpts() {
       }
     },
     scales:{
-      x:{ grid:{display:false}, ticks:{font:{size:12},autoSkip:false,maxRotation:0} },
+      x:{ grid:{display:false}, ticks:{color:'#e2e8f0',font:{size:12},autoSkip:false,maxRotation:0} },
       y:{ beginAtZero:true, display:false }
     }
   };
@@ -747,7 +747,7 @@ function drawFY(highlight, selCat) {
         datalabels:{anchor:'end', align:'end', offset:2, color:INK, font:{size:13,weight:'600'}, formatter:v=>v?inr(v):''}
       },
       scales:{
-        x:{grid:{display:false},ticks:{font:{size:12}}},
+        x:{grid:{display:false},ticks:{color:'#e2e8f0',font:{size:12}}},
         y:{beginAtZero:true, display:false}
       }
     }, (year) => {
