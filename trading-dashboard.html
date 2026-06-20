@@ -578,12 +578,12 @@ function barOpts() {
       tooltip:{callbacks:{label:c=>c.dataset.label+': '+inr(c.parsed.y)}},
       datalabels:{
         anchor:'end', align:'end', offset:2,
-        color:INK, font:{size:10, weight:'600'},
+        color:INK, font:{size:13, weight:'600'},
         formatter:v => v ? inr(v) : ''
       }
     },
     scales:{
-      x:{ grid:{display:false}, ticks:{font:{size:11},autoSkip:false,maxRotation:0} },
+      x:{ grid:{display:false}, ticks:{font:{size:12},autoSkip:false,maxRotation:0} },
       y:{ beginAtZero:true, display:false }
     }
   };
@@ -738,7 +738,7 @@ function drawWL(wins, losses, available) {
       plugins:{
         legend:{display:false},
         tooltip:{callbacks:{label:c=>{const t=c.dataset.data.reduce((a,b)=>a+b,0);return c.label+': '+c.parsed+' ('+(c.parsed/t*100).toFixed(1)+'%)';}}},
-        datalabels:{color:c=>c.dataIndex===0?PAPER:'#ffffff', font:{size:12,weight:'700'}, formatter:v=>v||''}
+        datalabels:{color:c=>c.dataIndex===0?PAPER:'#ffffff', font:{size:14,weight:'700'}, formatter:v=>v||''}
       }
     }
   });
@@ -768,10 +768,10 @@ function drawFY(highlight, selCat) {
       plugins:{
         legend:{display:false},
         tooltip:{callbacks:{label:c=>c.dataset.label+': '+inr(c.parsed.y)}},
-        datalabels:{anchor:'end', align:'end', offset:2, color:INK, font:{size:10,weight:'600'}, formatter:v=>v?inr(v):''}
+        datalabels:{anchor:'end', align:'end', offset:2, color:INK, font:{size:13,weight:'600'}, formatter:v=>v?inr(v):''}
       },
       scales:{
-        x:{grid:{display:false},ticks:{font:{size:11}}},
+        x:{grid:{display:false},ticks:{font:{size:12}}},
         y:{beginAtZero:true, display:false}
       }
     }, (year) => {
