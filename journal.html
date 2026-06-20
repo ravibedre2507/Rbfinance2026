@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Trading Journal Dashboard</title>
+<title>Trade Journal 2026</title>
 <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -30,6 +30,7 @@ h1{font-size:2.2rem;color:#facc15}
 /* ── Analytics Section ── */
 .section-title{font-size:1.1rem;font-weight:700;color:#facc15;margin:8px 0 14px}
 .chart-row{display:grid;gap:18px;margin-bottom:24px}
+.chart-row.cols-1{grid-template-columns:1fr}
 .chart-row.cols-2{grid-template-columns:1.4fr 1fr}
 .chart-card{background:linear-gradient(145deg,#111827,#1e293b);border-radius:20px;border:1px solid rgba(255,255,255,.08);box-shadow:0 10px 30px rgba(0,0,0,.35);padding:20px}
 .chart-card h4{font-size:.9rem;color:#cbd5e1;margin-bottom:14px;font-weight:600}
@@ -109,7 +110,7 @@ h1{font-size:1.7rem}
 <div class="container">
 <div class="header">
 <div class="header-left">
-<h1>📈 Trading Journal Dashboard</h1>
+<h1>📈 Trade Journal 2026</h1>
 <p class="tagline">Every trade. Every lesson. Tracked.</p>
 <span class="live-badge"><span class="live-dot"></span>Live from Google Sheets</span>
 <span id="last-updated">Loading…</span>
@@ -129,11 +130,7 @@ h1{font-size:1.7rem}
 <div class="card"><h3>Win Rate</h3><p id="winRate">0%</p></div>
 </div>
 
-<div class="chart-row cols-2">
-<div class="chart-card">
-<h4>Equity Curve — Cumulative P&L</h4>
-<div class="canvas-wrap"><canvas id="equityChart"></canvas></div>
-</div>
+<div class="chart-row cols-1">
 <div class="chart-card">
 <h4>Performance by Strategy</h4>
 <div class="canvas-wrap"><canvas id="setupChart"></canvas></div>
@@ -141,6 +138,12 @@ h1{font-size:1.7rem}
 </div>
 
 <div class="section-title">Daily P&L Calendar</div>
+<div class="filter-bar">
+<div class="filter-field"><label>Year</label><select id="calYearFilter"><option value="all">All Years</option></select></div>
+<div class="filter-field"><label>Strategy</label><select id="calStrategyFilter"><option value="all">All Strategies</option></select></div>
+<div class="filter-field"><label>Result</label><select id="calResultFilter"><option value="all">All</option><option value="win">Wins</option><option value="loss">Losses</option></select></div>
+<button class="btn-clear" onclick="clearCalendarFilters()">✕ Clear</button>
+</div>
 <div class="calendar-row" id="calendarRow"></div>
 
 <div class="section-title">Trade Log</div>
@@ -243,16 +246,19 @@ document.getElementById('totalWins').innerText=totalWins;
 document.getElementById('totalLosses').innerText=totalLosses;
 document.getElementById('winRate').innerText=((totalWins/tradesArr.length)*100 || 0).toFixed(1)+'%';
 
-buildEquityChart(tradesArr);
 buildSetupChart(tradesArr);
-buildCalendar(tradesArr);
 populateStrategyFilter(tradesArr);
+populateCalendarFilter(tradesArr);
 buildHeader();
 renderFiltered();
 
 ['searchInput','strategyFilter','resultFilter','dateFrom','dateTo'].forEach(id=>{
 document.getElementById(id).addEventListener(id==='searchInput'?'keyup':'change',renderFiltered);
 });
+['calYearFilter','calStrategyFilter','calResultFilter'].forEach(id=>{
+document.getElementById(id).addEventListener('change',renderCalendar);
+});
+renderCalendar();
 
 const now=new Date();
 document.getElementById('last-updated').textContent='Updated: '+
@@ -266,6 +272,43 @@ function populateStrategyFilter(trades){
 const set=[...new Set(trades.map(t=>t.strategy).filter(Boolean))].sort();
 const sel=document.getElementById('strategyFilter');
 set.forEach(s=>{ const o=document.createElement('option'); o.value=s; o.textContent=s; sel.appendChild(o); });
+}
+
+function populateCalendarFilter(trades){
+const strategies=[...new Set(trades.map(t=>t.strategy).filter(Boolean))].sort();
+const stratSel=document.getElementById('calStrategyFilter');
+strategies.forEach(s=>{ const o=document.createElement('option'); o.value=s; o.textContent=s; stratSel.appendChild(o); });
+
+const years=[...new Set(trades.map(t=>{ const d=parseDDMMYYYY(t.date); return d?d.getFullYear():null; }).filter(Boolean))].sort();
+const yearSel=document.getElementById('calYearFilter');
+years.forEach(y=>{ const o=document.createElement('option'); o.value=y; o.textContent=y; yearSel.appendChild(o); });
+}
+
+function clearCalendarFilters(){
+document.getElementById('calYearFilter').value='all';
+document.getElementById('calStrategyFilter').value='all';
+document.getElementById('calResultFilter').value='all';
+renderCalendar();
+}
+
+function renderCalendar(){
+const year=document.getElementById('calYearFilter').value;
+const strategy=document.getElementById('calStrategyFilter').value;
+const result=document.getElementById('calResultFilter').value;
+const list=tradesArr.filter(t=>{
+if(strategy!=='all' && t.strategy!==strategy) return false;
+if(result!=='all'){
+const r=(t.result||'').toLowerCase();
+if(result==='win' && !r.includes('win')) return false;
+if(result==='loss' && !r.includes('loss')) return false;
+}
+if(year!=='all'){
+const d=parseDDMMYYYY(t.date);
+if(!d || String(d.getFullYear())!==year) return false;
+}
+return true;
+});
+buildCalendar(list);
 }
 
 function buildHeader(){
@@ -372,29 +415,6 @@ html+=`<div class="trade-card ${isWin?'win':'loss'}" onclick="showTradeModal(${i
 </div>`;
 });
 document.getElementById('mobileCards').innerHTML=html;
-}
-
-function buildEquityChart(trades){
-const chronological=[...trades].sort((a,b)=>(parseDDMMYYYY(a.date)||0)-(parseDDMMYYYY(b.date)||0));
-let cum=0;
-const labels=[], data=[];
-chronological.forEach(t=>{ cum+=t.pnl; labels.push('#'+t.no); data.push(Math.round(cum)); });
-new Chart(document.getElementById('equityChart').getContext('2d'),{
-type:'line',
-data:{ labels, datasets:[{
-  label:'Cumulative P&L', data,
-  borderColor:'#facc15', backgroundColor:'rgba(250,204,21,.12)',
-  fill:true, tension:.25, pointRadius:0, borderWidth:2
-}]},
-options:{
-  responsive:true, maintainAspectRatio:false,
-  plugins:{ legend:{display:false}, tooltip:{callbacks:{label:c=>inr(c.parsed.y)}} },
-  scales:{
-    x:{ ticks:{color:'#64748b', maxTicksLimit:10}, grid:{color:'#1f2937'} },
-    y:{ ticks:{color:'#64748b', callback:v=>inr(v)}, grid:{color:'#1f2937'} }
-  }
-}
-});
 }
 
 function buildSetupChart(trades){
