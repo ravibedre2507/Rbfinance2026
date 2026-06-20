@@ -3,8 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Trade Diary | RB Finance</title>
+<title>Trading Journal Dashboard</title>
 <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
@@ -25,25 +26,68 @@ h1{font-size:2.2rem;color:#facc15}
 .card{background:linear-gradient(145deg,#111827,#1e293b);padding:20px;border-radius:20px;border:1px solid rgba(255,255,255,.08);box-shadow:0 10px 30px rgba(0,0,0,.35);min-width:180px}
 .card h3{font-size:.95rem;color:#cbd5e1;margin-bottom:10px}.card p{font-size:1.7rem;font-weight:800}
 .profit{color:#22c55e}.loss{color:#ef4444}
+
+/* ── Analytics Section ── */
+.section-title{font-size:1.1rem;font-weight:700;color:#facc15;margin:8px 0 14px}
+.chart-row{display:grid;gap:18px;margin-bottom:24px}
+.chart-row.cols-2{grid-template-columns:1.4fr 1fr}
+.chart-card{background:linear-gradient(145deg,#111827,#1e293b);border-radius:20px;border:1px solid rgba(255,255,255,.08);box-shadow:0 10px 30px rgba(0,0,0,.35);padding:20px}
+.chart-card h4{font-size:.9rem;color:#cbd5e1;margin-bottom:14px;font-weight:600}
+.canvas-wrap{position:relative;width:100%;height:280px}
+
+/* ── Calendar Heatmap ── */
+.calendar-row{display:flex;gap:16px;overflow-x:auto;padding-bottom:10px}
+.month-card{background:linear-gradient(145deg,#111827,#1e293b);border-radius:16px;border:1px solid rgba(255,255,255,.08);padding:14px;min-width:240px;flex-shrink:0}
+.month-title{font-size:.85rem;font-weight:700;color:#facc15;margin-bottom:10px;text-align:center}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}
+.cal-dow{font-size:.6rem;color:#64748b;text-align:center;padding-bottom:2px}
+.cal-day{aspect-ratio:1;border-radius:6px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:.6rem;color:#fff;background:#1e293b40}
+.cal-day.empty{background:transparent}
+.cal-day .d{font-weight:700;font-size:.68rem;line-height:1.1}
+.cal-day .p{font-size:.52rem;opacity:.9;line-height:1.1}
+
 .controls{display:flex;justify-content:space-between;gap:15px;flex-wrap:wrap;margin-bottom:18px}
 .search-box,.filter-box{padding:12px 16px;border-radius:12px;border:none;background:#1e293b;color:white;min-width:220px}
 .table-container{overflow-x:auto;background:#111827;border-radius:20px;border:1px solid rgba(255,255,255,.08)}
 table{width:100%;border-collapse:collapse}
 th{background:#facc15;color:#000;padding:14px;font-size:.9rem;position:sticky;top:0}
 td{padding:12px;border-bottom:1px solid #1f2937;text-align:center;font-size:.9rem}
+tbody tr{cursor:pointer}
 tr:hover{background:#172033}
 .win-row{background:rgba(34,197,94,.06);border-left:3px solid #22c55e}
 .loss-row{background:rgba(239,68,68,.05);border-left:3px solid #ef4444}
 .badge{padding:6px 10px;border-radius:999px;font-size:.8rem;font-weight:700;display:inline-block}
 .badge-win{background:rgba(34,197,94,.15);color:#22c55e}.badge-loss{background:rgba(239,68,68,.15);color:#ef4444}
-@media(max-width:768px){body{padding:16px}h1{font-size:1.7rem}.card p{font-size:1.4rem}.dashboard-grid{grid-template-columns:repeat(7,180px)}}
+
+/* ── Trade Detail Modal ── */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;align-items:center;justify-content:center;z-index:1000;padding:20px}
+.modal-overlay.open{display:flex}
+.modal-box{background:#111827;border:1px solid rgba(255,255,255,.1);border-radius:18px;max-width:520px;width:100%;max-height:85vh;overflow-y:auto;padding:24px;position:relative;box-shadow:0 10px 40px rgba(0,0,0,.5)}
+.modal-close{position:absolute;top:16px;right:18px;background:none;border:none;color:#94a3b8;font-size:1.4rem;cursor:pointer;line-height:1}
+.modal-close:hover{color:#fff}
+.modal-box h3{color:#facc15;font-size:1.15rem;margin-bottom:2px}
+.modal-sub{color:#94a3b8;font-size:.8rem;margin-bottom:14px}
+.modal-row{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid #1f2937;font-size:.85rem;gap:12px}
+.modal-row span:first-child{color:#94a3b8;white-space:nowrap}
+.modal-row span:last-child{text-align:right;font-weight:600}
+.modal-note{margin-top:14px}
+.modal-note-label{font-size:.75rem;color:#facc15;font-weight:700;text-transform:uppercase;letter-spacing:.4px;margin-bottom:4px}
+.modal-note p{font-size:.85rem;color:#cbd5e1;line-height:1.5;margin-bottom:14px}
+
+@media(max-width:768px){
+.container{padding:16px}
+h1{font-size:1.7rem}
+.card p{font-size:1.4rem}
+.dashboard-grid{grid-template-columns:repeat(7,180px)}
+.chart-row.cols-2{grid-template-columns:1fr}
+}
 </style>
 </head>
 <body>
 <div class="container">
 <div class="header">
 <div class="header-left">
-<h1>📓 Trade Diary</h1>
+<h1>📈 Trading Journal Dashboard</h1>
 <p class="tagline">Every trade. Every lesson. Tracked.</p>
 <span class="live-badge"><span class="live-dot"></span>Live from Google Sheets</span>
 <span id="last-updated">Loading…</span>
@@ -63,6 +107,21 @@ tr:hover{background:#172033}
 <div class="card"><h3>Losing Trades</h3><p id="totalLosses" class="loss">0</p></div>
 <div class="card"><h3>Win Rate</h3><p id="winRate">0%</p></div>
 </div>
+
+<div class="chart-row cols-2">
+<div class="chart-card">
+<h4>Equity Curve — Cumulative P&L</h4>
+<div class="canvas-wrap"><canvas id="equityChart"></canvas></div>
+</div>
+<div class="chart-card">
+<h4>Performance by Strategy</h4>
+<div class="canvas-wrap"><canvas id="setupChart"></canvas></div>
+</div>
+</div>
+
+<div class="section-title">Daily P&L Calendar</div>
+<div class="calendar-row" id="calendarRow"></div>
+
 <div class="table-container">
 <table id="journalTable">
 <thead id="tableHead"></thead>
@@ -70,11 +129,29 @@ tr:hover{background:#172033}
 </table>
 </div>
 </div>
+
+<div class="modal-overlay" id="tradeModal">
+<div class="modal-box">
+<button class="modal-close" onclick="closeTradeModal()">&times;</button>
+<div id="modalContent"></div>
+</div>
+</div>
+
 <script>
 function inr(v){
 const n=parseFloat((v||0).toString().replace(/,/g,''))||0;
 return (n<0?'-':'')+'₹'+Math.round(Math.abs(n)).toLocaleString('en-IN');
 }
+function parseDDMMYYYY(s){
+const m=(s||'').toString().trim().match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+if(!m) return null;
+return new Date(+m[3], +m[2]-1, +m[1]);
+}
+const MONTH_NAMES=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const DOW=['S','M','T','W','T','F','S'];
+
+let tradesArr=[];
+
 const sheetURL='https://docs.google.com/spreadsheets/d/e/2PACX-1vRbSrzX6IexJncqPlRZcpI4FxuSgliicUnB5_-zz3SLRGcquh_xZYpmXammjO4VTkp72s8PY8Eu1yaZ/pub?gid=1077617715&single=true&output=csv';
 Papa.parse(sheetURL,{download:true,complete:function(results){
 const rows=results.data;
@@ -92,6 +169,7 @@ headers.forEach(header=>{tableHead+=`<th>${header}</th>`});
 tableHead+='</tr>';
 document.getElementById('tableHead').innerHTML=tableHead;
 let tableHTML='';
+tradesArr=[];
 dataRows.forEach((row)=>{
 const pnlCell=row[pnlColumnIndex]||'0';
 const pnlValue=parseFloat(pnlCell.toString().replace(/,/g,''))||0;
@@ -101,7 +179,15 @@ if(resultCell.includes('win')){totalWins++;rowClass='win-row'}
 if(resultCell.includes('loss')){totalLosses++;rowClass='loss-row'}
 totalTrades++;
 totalPnL+=pnlValue;
-tableHTML+=`<tr class="${rowClass}" data-result="${resultCell}">`;
+const idx=tradesArr.length;
+tradesArr.push({
+  no:row[0], date:row[1], symbol:row[2], direction:row[3], strategy:row[4],
+  qty:row[5], sl:row[6], target:row[7], buy:row[8], sale:row[9],
+  entryTime:row[10], exitTime:row[11], result:row[12], pnl:pnlValue,
+  ws:row[14], source:row[15], rr:row[16], rules:row[17],
+  entryLogic:row[18], emotion:row[19], mistakes:row[20]
+});
+tableHTML+=`<tr class="${rowClass}" data-result="${resultCell}" onclick="showTradeModal(${idx})">`;
 row.forEach((cell,index)=>{
 let className='';
 let displayCell=cell;
@@ -128,6 +214,10 @@ document.getElementById('totalWins').innerText=totalWins;
 document.getElementById('totalLosses').innerText=totalLosses;
 document.getElementById('winRate').innerText=((totalWins/totalTrades)*100 || 0).toFixed(1)+'%';
 
+buildEquityChart(tradesArr);
+buildSetupChart(tradesArr);
+buildCalendar(tradesArr);
+
 function applyFilters(){
 const searchValue=document.getElementById('searchInput').value.toLowerCase();
 const rows=document.querySelectorAll('#tradeTable tr');
@@ -146,6 +236,121 @@ now.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'});
 },error:function(){
 document.getElementById('last-updated').textContent='Error loading data';
 }});
+
+function buildEquityChart(trades){
+const chronological=[...trades].sort((a,b)=>(parseDDMMYYYY(a.date)||0)-(parseDDMMYYYY(b.date)||0));
+let cum=0;
+const labels=[], data=[];
+chronological.forEach(t=>{ cum+=t.pnl; labels.push('#'+t.no); data.push(Math.round(cum)); });
+new Chart(document.getElementById('equityChart').getContext('2d'),{
+type:'line',
+data:{ labels, datasets:[{
+  label:'Cumulative P&L', data,
+  borderColor:'#facc15', backgroundColor:'rgba(250,204,21,.12)',
+  fill:true, tension:.25, pointRadius:0, borderWidth:2
+}]},
+options:{
+  responsive:true, maintainAspectRatio:false,
+  plugins:{ legend:{display:false}, tooltip:{callbacks:{label:c=>inr(c.parsed.y)}} },
+  scales:{
+    x:{ ticks:{color:'#64748b', maxTicksLimit:10}, grid:{color:'#1f2937'} },
+    y:{ ticks:{color:'#64748b', callback:v=>inr(v)}, grid:{color:'#1f2937'} }
+  }
+}
+});
+}
+
+function buildSetupChart(trades){
+const map={};
+trades.forEach(t=>{
+const key=(t.strategy||'Other').trim();
+if(!map[key]) map[key]={profit:0,loss:0};
+if(t.pnl>=0) map[key].profit+=t.pnl; else map[key].loss+=t.pnl;
+});
+const labels=Object.keys(map);
+new Chart(document.getElementById('setupChart').getContext('2d'),{
+type:'bar',
+data:{ labels, datasets:[
+  {label:'Profit', data:labels.map(k=>Math.round(map[k].profit)), backgroundColor:'#22c55e', borderRadius:4},
+  {label:'Loss',   data:labels.map(k=>Math.round(map[k].loss)),   backgroundColor:'#ef4444', borderRadius:4}
+]},
+options:{
+  responsive:true, maintainAspectRatio:false,
+  plugins:{ legend:{labels:{color:'#cbd5e1'}}, tooltip:{callbacks:{label:c=>c.dataset.label+': '+inr(c.parsed.y)}} },
+  scales:{
+    x:{ ticks:{color:'#64748b'}, grid:{display:false} },
+    y:{ ticks:{color:'#64748b', callback:v=>inr(v)}, grid:{color:'#1f2937'} }
+  }
+}
+});
+}
+
+function buildCalendar(trades){
+const dayMap={};
+trades.forEach(t=>{
+const d=parseDDMMYYYY(t.date);
+if(!d) return;
+const key=d.getFullYear()+'-'+d.getMonth()+'-'+d.getDate();
+if(!dayMap[key]) dayMap[key]=0;
+dayMap[key]+=t.pnl;
+});
+const monthMap={};
+trades.forEach(t=>{
+const d=parseDDMMYYYY(t.date);
+if(!d) return;
+const mKey=d.getFullYear()+'-'+d.getMonth();
+if(!monthMap[mKey]) monthMap[mKey]={year:d.getFullYear(),month:d.getMonth()};
+});
+const months=Object.values(monthMap).sort((a,b)=>(a.year-b.year)||(a.month-b.month));
+const maxAbs=Math.max(1,...Object.values(dayMap).map(v=>Math.abs(v)));
+let html='';
+months.forEach(({year,month})=>{
+const firstDow=new Date(year,month,1).getDay();
+const daysInMonth=new Date(year,month+1,0).getDate();
+html+=`<div class="month-card"><div class="month-title">${MONTH_NAMES[month]} ${year}</div><div class="cal-grid">`;
+DOW.forEach(d=>html+=`<div class="cal-dow">${d}</div>`);
+for(let i=0;i<firstDow;i++) html+='<div class="cal-day empty"></div>';
+for(let day=1;day<=daysInMonth;day++){
+const key=year+'-'+month+'-'+day;
+const pnl=dayMap[key];
+let bg='#1e293b40', textP='';
+if(pnl!==undefined){
+const intensity=Math.min(1,Math.abs(pnl)/maxAbs);
+if(pnl>=0) bg=`rgba(34,197,94,${0.25+intensity*0.55})`;
+else bg=`rgba(239,68,68,${0.25+intensity*0.55})`;
+textP=`<div class="p">${pnl>=0?'+':''}${Math.round(pnl)}</div>`;
+}
+html+=`<div class="cal-day" style="background:${bg}" title="${MONTH_NAMES[month]} ${day}, ${year}${pnl!==undefined?': '+inr(pnl):''}"><div class="d">${day}</div>${textP}</div>`;
+}
+html+='</div></div>';
+});
+document.getElementById('calendarRow').innerHTML=html || '<p style="color:#94a3b8;font-size:.85rem">No dated trades to display.</p>';
+}
+
+function showTradeModal(idx){
+const t=tradesArr[idx];
+if(!t) return;
+const isWin=(t.result||'').toLowerCase().includes('win');
+document.getElementById('modalContent').innerHTML=`
+<h3>${t.symbol} <span class="badge ${isWin?'badge-win':'badge-loss'}">${isWin?'WIN':'LOSS'}</span></h3>
+<div class="modal-sub">${t.date} · ${t.direction} · ${t.strategy}</div>
+<div class="modal-row"><span>P&L</span><span class="${t.pnl>=0?'profit':'loss'}">${inr(t.pnl)}</span></div>
+<div class="modal-row"><span>Qty</span><span>${t.qty||'-'}</span></div>
+<div class="modal-row"><span>Buy / Sale Price</span><span>${t.buy||'-'} / ${t.sale||'-'}</span></div>
+<div class="modal-row"><span>Stop Loss / Target</span><span>${t.sl||'-'} / ${t.target||'-'}</span></div>
+<div class="modal-row"><span>Entry / Exit Time</span><span>${t.entryTime||'-'} / ${t.exitTime||'-'}</span></div>
+<div class="modal-row"><span>RR</span><span>${t.rr||'-'}</span></div>
+<div class="modal-row"><span>Rules Followed</span><span>${t.rules||'-'}</span></div>
+<div class="modal-row"><span>Source</span><span>${t.source||'-'}</span></div>
+<div class="modal-note">
+<div class="modal-note-label">Entry Logic</div><p>${t.entryLogic||'—'}</p>
+<div class="modal-note-label">Emotion During Entry</div><p>${t.emotion||'—'}</p>
+<div class="modal-note-label">Mistakes & Improvements</div><p>${t.mistakes||'—'}</p>
+</div>`;
+document.getElementById('tradeModal').classList.add('open');
+}
+function closeTradeModal(){ document.getElementById('tradeModal').classList.remove('open'); }
+document.getElementById('tradeModal').addEventListener('click',e=>{ if(e.target.id==='tradeModal') closeTradeModal(); });
 
 function exportTableToCSV(){
 let csv=[];
