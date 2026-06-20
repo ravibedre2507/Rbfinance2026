@@ -8,10 +8,16 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:'Inter',sans-serif;background:#050816;color:#fff;padding:24px}
+body{font-family:'Inter',sans-serif;background:#050816;color:#fff}
+.container{max-width:1800px;margin:0 auto;padding:24px}
 .header{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;flex-wrap:wrap;gap:15px}
+.header-left{display:flex;flex-direction:column;gap:6px}
 .header-actions{display:flex;gap:12px;align-items:center}
 h1{font-size:2.2rem;color:#facc15}
+.live-badge{display:inline-flex;align-items:center;gap:5px;color:#94a3b8;padding:3px 10px;border:1px solid #94a3b8;border-radius:20px;font-size:11px;font-weight:500;width:fit-content}
+.live-dot{width:6px;height:6px;border-radius:50%;background:#94a3b8;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+#last-updated{font-size:11px;color:#94a3b8;opacity:.8}
 .back-btn,.export-btn{background:#facc15;color:#000;padding:12px 18px;border-radius:12px;font-weight:700;text-decoration:none;border:none;cursor:pointer;font-size:.95rem}
 .export-btn{background:#22c55e;color:white}
 .dashboard-grid{display:grid;grid-template-columns:repeat(7,minmax(180px,1fr));gap:18px;margin-bottom:28px;overflow-x:auto}
@@ -31,10 +37,15 @@ tr:hover{background:#172033}.win-row{background:rgba(34,197,94,.06)}.loss-row{ba
 </style>
 </head>
 <body>
+<div class="container">
 <div class="header">
+<div class="header-left">
 <h1>📈 Trading Journal Dashboard</h1>
+<span class="live-badge"><span class="live-dot"></span>Live from Google Sheets</span>
+<span id="last-updated">Loading…</span>
+</div>
 <div class="header-actions">
-<input type="text" id="searchInput" class="search-box" placeholder="Search Stock / Setup..." onkeyup="filterTrades()">
+<input type="text" id="searchInput" class="search-box" placeholder="Search Stock / Setup...">
 <button class="export-btn" onclick="exportTableToCSV()">⬇ Export XLS</button>
 <a href="index.html" class="back-btn">← Back to Home</a>
 </div>
@@ -48,16 +59,27 @@ tr:hover{background:#172033}.win-row{background:rgba(34,197,94,.06)}.loss-row{ba
 <div class="card"><h3>Losing Trades</h3><p id="totalLosses" class="loss">0</p></div>
 <div class="card"><h3>Win Rate</h3><p id="winRate">0%</p></div>
 </div>
-<div class="controls">
-</select>
-</div>
 <div class="table-container">
 <table id="journalTable">
 <thead id="tableHead"></thead>
 <tbody id="tradeTable"></tbody>
 </table>
 </div>
+</div>
 <script>
+function inr(v){
+const n=parseFloat((v||0).toString().replace(/,/g,''))||0;
+return (n<0?'-':'')+'₹'+Math.round(Math.abs(n)).toLocaleString('en-IN');
+}
+function findLabelledValue(rows,label){
+for(let r=0;r<Math.min(rows.length,15);r++){
+for(let c=0;c<(rows[r]||[]).length;c++){
+const cell=(rows[r][c]||'').toString().trim().toLowerCase();
+if(cell===label){ return rows[r][c+1]||'0'; }
+}
+}
+return '0';
+}
 const sheetURL='https://docs.google.com/spreadsheets/d/e/2PACX-1vRbSrzX6IexJncqPlRZcpI4FxuSgliicUnB5_-zz3SLRGcquh_xZYpmXammjO4VTkp72s8PY8Eu1yaZ/pub?gid=1077617715&single=true&output=csv';
 Papa.parse(sheetURL,{download:true,complete:function(results){
 const rows=results.data;
@@ -66,8 +88,8 @@ const dataRows=rows.slice(7).filter(row=>row.some(cell=>cell.trim()!=='')).rever
 const resultColumnIndex=12;
 const pnlColumnIndex=13;
 let totalTrades=0,totalPnL=0,totalWins=0,totalLosses=0;
-const chargesCell=(rows[4] && rows[4][7]) ? rows[4][7] : '0';
-const netPnLCell=(rows[4] && rows[4][8]) ? rows[4][8] : '0';
+const chargesCell=findLabelledValue(rows,'charges');
+const netPnLCell=findLabelledValue(rows,'net p&l');
 let tableHead='<tr>';
 headers.forEach(header=>{tableHead+=`<th>${header}</th>`});
 tableHead+='</tr>';
@@ -93,6 +115,7 @@ if(resultCell.includes('loss')){displayCell='LOSS'}
 if(index===pnlColumnIndex){
 if(pnlValue>0){className='profit'}
 if(pnlValue<0){className='loss'}
+displayCell=inr(pnlValue);
 }
 tableHTML+=`<td class="${className}">${displayCell}</td>`;
 });
@@ -100,28 +123,30 @@ tableHTML+='</tr>';
 });
 document.getElementById('tradeTable').innerHTML=tableHTML;
 document.getElementById('totalTrades').innerText=totalTrades;
-document.getElementById('totalPnL').innerText=Math.round(totalPnL);
-document.getElementById('chargesValue').innerText=chargesCell;
-document.getElementById('netPnLValue').innerText=netPnLCell;
+document.getElementById('totalPnL').innerText=inr(totalPnL);
+document.getElementById('chargesValue').innerText=inr(chargesCell);
+document.getElementById('netPnLValue').innerText=inr(netPnLCell);
 document.getElementById('totalWins').innerText=totalWins;
 document.getElementById('totalLosses').innerText=totalLosses;
 document.getElementById('winRate').innerText=((totalWins/totalTrades)*100 || 0).toFixed(1)+'%';
 
 function applyFilters(){
 const searchValue=document.getElementById('searchInput').value.toLowerCase();
-const resultValue=document.getElementById('resultFilter').value;
 const rows=document.querySelectorAll('#tradeTable tr');
 rows.forEach(row=>{
 const text=row.innerText.toLowerCase();
-const result=row.getAttribute('data-result');
-const searchMatch=text.includes(searchValue);
-const resultMatch=resultValue==='all'||result.includes(resultValue);
-row.style.display=(searchMatch && resultMatch)?'':'none';
+row.style.display=text.includes(searchValue)?'':'none';
 });
 }
 
 document.getElementById('searchInput').addEventListener('keyup',applyFilters);
-document.getElementById('resultFilter').addEventListener('change',applyFilters);
+
+const now=new Date();
+document.getElementById('last-updated').textContent='Updated: '+
+now.toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'})+' '+
+now.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'});
+},error:function(){
+document.getElementById('last-updated').textContent='Error loading data';
 }});
 
 function exportTableToCSV(){
