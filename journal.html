@@ -31,14 +31,15 @@ h1{font-size:2.2rem;color:#facc15}
 .section-title{font-size:1.1rem;font-weight:700;color:#facc15;margin:8px 0 14px}
 .chart-row{display:grid;gap:18px;margin-bottom:24px}
 .chart-row.cols-1{grid-template-columns:1fr}
-.chart-row.cols-2{grid-template-columns:1.4fr 1fr}
+.chart-row.cols-2{grid-template-columns:1fr 1fr}
 .chart-card{background:linear-gradient(145deg,#111827,#1e293b);border-radius:20px;border:1px solid rgba(255,255,255,.08);box-shadow:0 10px 30px rgba(0,0,0,.35);padding:20px}
 .chart-card h4{font-size:.9rem;color:#cbd5e1;margin-bottom:14px;font-weight:600}
 .canvas-wrap{position:relative;width:100%;height:280px}
 
 /* ── Calendar Heatmap ── */
 .calendar-row{display:flex;gap:16px;overflow-x:auto;padding-bottom:10px}
-.month-card{background:linear-gradient(145deg,#111827,#1e293b);border-radius:16px;border:1px solid rgba(255,255,255,.08);padding:14px;min-width:240px;flex-shrink:0}
+.calendar-row.single{justify-content:center}
+.month-card{background:linear-gradient(145deg,#111827,#1e293b);border-radius:16px;border:1px solid rgba(255,255,255,.08);padding:14px;min-width:240px;max-width:320px;width:100%;flex-shrink:0}
 .month-title{font-size:.85rem;font-weight:700;color:#facc15;margin-bottom:10px;text-align:center}
 .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}
 .cal-dow{font-size:.6rem;color:#64748b;text-align:center;padding-bottom:2px}
@@ -130,21 +131,22 @@ h1{font-size:1.7rem}
 <div class="card"><h3>Win Rate</h3><p id="winRate">0%</p></div>
 </div>
 
-<div class="chart-row cols-1">
+<div class="chart-row cols-2">
 <div class="chart-card">
 <h4>Performance by Strategy</h4>
 <div class="canvas-wrap"><canvas id="setupChart"></canvas></div>
 </div>
-</div>
-
-<div class="section-title">Daily P&L Calendar</div>
+<div class="chart-card">
+<h4>Daily P&L Calendar</h4>
 <div class="filter-bar">
-<div class="filter-field"><label>Year</label><select id="calYearFilter"><option value="all">All Years</option></select></div>
+<div class="filter-field"><label>Month</label><select id="calMonthFilter"></select></div>
 <div class="filter-field"><label>Strategy</label><select id="calStrategyFilter"><option value="all">All Strategies</option></select></div>
 <div class="filter-field"><label>Result</label><select id="calResultFilter"><option value="all">All</option><option value="win">Wins</option><option value="loss">Losses</option></select></div>
 <button class="btn-clear" onclick="clearCalendarFilters()">✕ Clear</button>
 </div>
-<div class="calendar-row" id="calendarRow"></div>
+<div class="calendar-row single" id="calendarRow"></div>
+</div>
+</div>
 
 <div class="section-title">Trade Log</div>
 <div class="filter-bar">
@@ -255,7 +257,7 @@ renderFiltered();
 ['searchInput','strategyFilter','resultFilter','dateFrom','dateTo'].forEach(id=>{
 document.getElementById(id).addEventListener(id==='searchInput'?'keyup':'change',renderFiltered);
 });
-['calYearFilter','calStrategyFilter','calResultFilter'].forEach(id=>{
+['calMonthFilter','calStrategyFilter','calResultFilter'].forEach(id=>{
 document.getElementById(id).addEventListener('change',renderCalendar);
 });
 renderCalendar();
@@ -278,21 +280,42 @@ function populateCalendarFilter(trades){
 const strategies=[...new Set(trades.map(t=>t.strategy).filter(Boolean))].sort();
 const stratSel=document.getElementById('calStrategyFilter');
 strategies.forEach(s=>{ const o=document.createElement('option'); o.value=s; o.textContent=s; stratSel.appendChild(o); });
+refreshMonthOptions(trades);
+}
 
-const years=[...new Set(trades.map(t=>{ const d=parseDDMMYYYY(t.date); return d?d.getFullYear():null; }).filter(Boolean))].sort();
-const yearSel=document.getElementById('calYearFilter');
-years.forEach(y=>{ const o=document.createElement('option'); o.value=y; o.textContent=y; yearSel.appendChild(o); });
+function refreshMonthOptions(trades){
+const monthSel=document.getElementById('calMonthFilter');
+const prevValue=monthSel.value;
+const monthMap={};
+trades.forEach(t=>{
+const d=parseDDMMYYYY(t.date);
+if(!d) return;
+const key=d.getFullYear()+'-'+d.getMonth();
+if(!monthMap[key]) monthMap[key]={year:d.getFullYear(),month:d.getMonth()};
+});
+const months=Object.values(monthMap).sort((a,b)=>(b.year-a.year)||(b.month-a.month));
+monthSel.innerHTML='';
+months.forEach(({year,month})=>{
+const o=document.createElement('option');
+o.value=year+'-'+month;
+o.textContent=MONTH_NAMES[month]+' '+year;
+monthSel.appendChild(o);
+});
+const now=new Date();
+const currentKey=now.getFullYear()+'-'+now.getMonth();
+if(months.some(m=>(m.year+'-'+m.month)===prevValue)) monthSel.value=prevValue;
+else if(months.some(m=>(m.year+'-'+m.month)===currentKey)) monthSel.value=currentKey;
+else if(months.length) monthSel.value=months[0].year+'-'+months[0].month;
 }
 
 function clearCalendarFilters(){
-document.getElementById('calYearFilter').value='all';
 document.getElementById('calStrategyFilter').value='all';
 document.getElementById('calResultFilter').value='all';
+refreshMonthOptions(tradesArr);
 renderCalendar();
 }
 
 function renderCalendar(){
-const year=document.getElementById('calYearFilter').value;
 const strategy=document.getElementById('calStrategyFilter').value;
 const result=document.getElementById('calResultFilter').value;
 const list=tradesArr.filter(t=>{
@@ -302,13 +325,11 @@ const r=(t.result||'').toLowerCase();
 if(result==='win' && !r.includes('win')) return false;
 if(result==='loss' && !r.includes('loss')) return false;
 }
-if(year!=='all'){
-const d=parseDDMMYYYY(t.date);
-if(!d || String(d.getFullYear())!==year) return false;
-}
 return true;
 });
-buildCalendar(list);
+refreshMonthOptions(list);
+const [y,m]=document.getElementById('calMonthFilter').value.split('-').map(Number);
+buildCalendar(list, y, m);
 }
 
 function buildHeader(){
@@ -442,34 +463,27 @@ options:{
 });
 }
 
-function buildCalendar(trades){
+function buildCalendar(trades, year, month){
+if(year===undefined || month===undefined || isNaN(year) || isNaN(month)){
+document.getElementById('calendarRow').innerHTML='<p style="color:#94a3b8;font-size:.85rem">No dated trades to display.</p>';
+return;
+}
 const dayMap={};
 trades.forEach(t=>{
 const d=parseDDMMYYYY(t.date);
-if(!d) return;
-const key=d.getFullYear()+'-'+d.getMonth()+'-'+d.getDate();
+if(!d || d.getFullYear()!==year || d.getMonth()!==month) return;
+const key=d.getDate();
 if(!dayMap[key]) dayMap[key]=0;
 dayMap[key]+=t.pnl;
 });
-const monthMap={};
-trades.forEach(t=>{
-const d=parseDDMMYYYY(t.date);
-if(!d) return;
-const mKey=d.getFullYear()+'-'+d.getMonth();
-if(!monthMap[mKey]) monthMap[mKey]={year:d.getFullYear(),month:d.getMonth()};
-});
-const months=Object.values(monthMap).sort((a,b)=>(a.year-b.year)||(a.month-b.month));
 const maxAbs=Math.max(1,...Object.values(dayMap).map(v=>Math.abs(v)));
-let html='';
-months.forEach(({year,month})=>{
 const firstDow=new Date(year,month,1).getDay();
 const daysInMonth=new Date(year,month+1,0).getDate();
-html+=`<div class="month-card"><div class="month-title">${MONTH_NAMES[month]} ${year}</div><div class="cal-grid">`;
+let html=`<div class="month-card"><div class="month-title">${MONTH_NAMES[month]} ${year}</div><div class="cal-grid">`;
 DOW.forEach(d=>html+=`<div class="cal-dow">${d}</div>`);
 for(let i=0;i<firstDow;i++) html+='<div class="cal-day empty"></div>';
 for(let day=1;day<=daysInMonth;day++){
-const key=year+'-'+month+'-'+day;
-const pnl=dayMap[key];
+const pnl=dayMap[day];
 let bg='#1e293b40', textP='';
 if(pnl!==undefined){
 const intensity=Math.min(1,Math.abs(pnl)/maxAbs);
@@ -480,8 +494,7 @@ textP=`<div class="p">${pnl>=0?'+':''}${Math.round(pnl)}</div>`;
 html+=`<div class="cal-day" style="background:${bg}" title="${MONTH_NAMES[month]} ${day}, ${year}${pnl!==undefined?': '+inr(pnl):''}"><div class="d">${day}</div>${textP}</div>`;
 }
 html+='</div></div>';
-});
-document.getElementById('calendarRow').innerHTML=html || '<p style="color:#94a3b8;font-size:.85rem">No dated trades to display.</p>';
+document.getElementById('calendarRow').innerHTML=html;
 }
 
 function showTradeModal(idx){
