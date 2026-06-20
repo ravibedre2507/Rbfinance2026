@@ -8,21 +8,22 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-datalabels/2.2.0/chartjs-plugin-datalabels.min.js"></script>
   <style>
     :root {
-      --bg: #ffffff; --card: #ffffff; --border: #15803d;
-      --text: #14532d; --muted: #5a8a6b;
-      --ink: #15803d; --ink-light: #e5e5e5;
-      --header-bg: #15803d; --header-text: #ffffff;
-      --select-bg: #ffffff;
-      --hover-bg: #eef7f0; --tag-bg: #15803d; --tag-text: #ffffff;
-      --header-border: #0f5c2c;
-      --radius: 4px; --shadow: none;
+      --bg: #050816; --card: #111827; --border: rgba(255,255,255,.08);
+      --text: #ffffff; --muted: #94a3b8;
+      --ink: #facc15; --ink-light: #1e293b;
+      --header-bg: #facc15; --header-text: #000000;
+      --select-bg: #1e293b;
+      --hover-bg: #172033; --tag-bg: #facc15; --tag-text: #000000;
+      --header-border: #eab308;
+      --radius: 12px; --shadow: 0 10px 30px rgba(0,0,0,.35);
     }
     html[data-theme="dark"] {
-      --bg: #000000; --card: #000000; --border: #ffffff;
+      --bg: #000000; --card: #0a0a0a; --border: rgba(255,255,255,.12);
       --text: #ffffff; --muted: #aaaaaa;
-      --header-bg: #ffffff; --header-text: #000000;
-      --select-bg: #000000;
-      --hover-bg: #1a1a1a; --tag-bg: #ffffff; --tag-text: #000000;
+      --header-bg: #facc15; --header-text: #000000;
+      --select-bg: #1a1a1a;
+      --hover-bg: #1a1a1a; --tag-bg: #facc15; --tag-text: #000000;
+      --header-border: #eab308;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
@@ -49,7 +50,7 @@
     .filter-group select {
       padding: 5px 28px 5px 10px; border: 1px solid var(--border); border-radius: var(--radius);
       font-size: 13px; color: var(--text); background-color: var(--select-bg);
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%2315803d'/%3E%3C/svg%3E");
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23facc15'/%3E%3C/svg%3E");
       background-repeat: no-repeat; background-position: right 9px center;
       appearance: none; cursor: pointer; transition: border-color .15s;
     }
@@ -89,8 +90,8 @@
     .legend { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 12px; font-size: 11px; color: var(--muted); }
     .legend-item { display: flex; align-items: center; gap: 5px; }
     .legend-dot { width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; }
-    .legend-dot.solid { background: var(--text); }
-    .legend-dot.outline { background: #dc2626; border: 1.5px solid #dc2626; }
+    .legend-dot.solid { background: #22c55e; }
+    .legend-dot.outline { background: #ef4444; border: 1.5px solid #ef4444; }
     .canvas-wrap { position: relative; width: 100%; }
 
     .footer { text-align: center; padding: 16px; font-size: 11px; color: var(--muted); }
@@ -204,14 +205,14 @@ function killChart(id) { if (charts[id]) { charts[id].destroy(); delete charts[i
    ════════════════════════════════════════ */
 const THEME_KEY = 'rbfinance_theme';
 let INK, PAPER, GRAY;
-const RED = '#dc2626', RED_DIM = '#dc262666';
+const RED = '#ef4444', RED_DIM = '#ef444466';
 
 function setTheme(theme) {
   document.documentElement.setAttribute('data-theme', theme);
   try { localStorage.setItem(THEME_KEY, theme); } catch(e) {}
 
-  if (theme === 'dark') { INK = '#ffffff'; PAPER = '#000000'; GRAY = '#777777'; }
-  else                  { INK = '#15803d'; PAPER = '#ffffff'; GRAY = '#9fcbab'; }
+  if (theme === 'dark') { INK = '#22c55e'; PAPER = '#ffffff'; GRAY = '#475569'; }
+  else                  { INK = '#22c55e'; PAPER = '#0b1220'; GRAY = '#475569'; }
 
   const lightBtn = el('theme-btn-light'), darkBtn = el('theme-btn-dark');
   if (lightBtn && darkBtn) {
@@ -622,7 +623,7 @@ function showSymbolPopup(title, sub, rows) {
     tbody.innerHTML = bySymbol.map(r => {
       const net = r.profit - r.loss;
       return `<tr><td>${r.symbol}</td><td>${r.trades}</td>
-        <td style="color:${net>0?'var(--text)':net<0?'#dc2626':'var(--muted)'}">${(net<0?'-':'')+inr(Math.abs(net))}</td></tr>`;
+        <td style="color:${net>0?'var(--text)':net<0?'#ef4444':'var(--muted)'}">${(net<0?'-':'')+inr(Math.abs(net))}</td></tr>`;
     }).join('');
   }
 
